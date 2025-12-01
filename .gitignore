@@ -5,4 +5,4 @@
 *.lock
 *.vpp.*
 tmp/*
-.DS_store
+.DS_Store
