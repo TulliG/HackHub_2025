@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.model;
+package it.unicam.cs.hackhub.Model;
 
 /**
  * Class that defines the {@code Team} that is defined in the {@code Hackhub}
