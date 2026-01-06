@@ -1,8 +1,16 @@
+# Visual Paradigm
 .vpprefdata/
-*.vpp~*
+*.vpp~
 *.vpp.working
 *.vpp.working-journal
-*.lock
-*.vpp.*
-tmp/*
+*.vpp.lock
+
+# Temporary files
+tmp/
+
+# macOS
 .DS_Store
+
+# IntelliJ / IDEA
+.idea/workspace.xml
+.idea/tasks.xml
