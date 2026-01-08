@@ -5,4 +5,16 @@ package it.unicam.cs.hackhub.Model;
  * */
 public class User {
 
+    private Long id;
+
+    private String username;
+
+    private String password;
+
+    private HackathonPartecipation partecipation;
+
+    private Team team;
+
+    public User() {}
+
 }
