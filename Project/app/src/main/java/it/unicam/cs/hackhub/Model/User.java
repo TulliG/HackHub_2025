@@ -11,7 +11,7 @@ public class User {
 
     private String password;
 
-    private HackathonPartecipation partecipation;
+    private HackathonParticipation participation;
 
     private Team team;
 
