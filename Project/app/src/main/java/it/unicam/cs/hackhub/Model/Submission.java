@@ -14,7 +14,7 @@ public class Submission {
     private Team submissioner;
 
     public Submission(@NonNull File content,@NonNull Team team) {
-        //TODO COntrollo file sottomissione
+        //TODO Controllo file sottomissione
         this.content = content;
         this.submissioner = team;
     }
