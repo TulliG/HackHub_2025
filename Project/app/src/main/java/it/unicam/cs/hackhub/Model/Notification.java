@@ -2,6 +2,7 @@ package it.unicam.cs.hackhub.Model;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+//TODO Notification interface
 /**
  * Class that represents the notification inside the system.
  */
