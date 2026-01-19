@@ -7,6 +7,8 @@ import java.io.File;
 
 public class Submission {
 
+    private Long id;
+
     private File content;
 
     private Integer grade = null;
@@ -33,6 +35,15 @@ public class Submission {
 
     public Team getSubmissioner() {
         return submissioner;
+    }
+
+
+    /**
+     * Adds the id
+     * @param id the id
+     */
+    public void setId(@NonNull Long id) {
+        this.id = id;
     }
 
 }

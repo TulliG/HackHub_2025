@@ -2,6 +2,7 @@ package it.unicam.cs.hackhub.Model;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +18,8 @@ public class Hackathon {
     private String name;
 
     private String location;
+
+    private String rules;
 
     private int prize;
 
@@ -34,23 +37,24 @@ public class Hackathon {
 
     private int minTeamMembers;
 
-    private int maxteamMembers;
+    private int maxTeamMembers;
 
     private User organizer;
 
-    private User judge;
+    private User judge = null;
 
-    private Set<User> mentors;
+    private Set<User> mentors = new HashSet<>();
 
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<>();
 
+    //TODO fare il main
     private HackathonState state;
 
-    private Team winner;
+    private Team winner = null;
 
-    private Calendar calendar;
+    private Calendar calendar = new Calendar();
 
-    private Set<Submission> submissions;
+    private Set<Submission> submissions = new HashSet<>();
 
     private class Calendar {
 
@@ -103,6 +107,14 @@ public class Hackathon {
 
     public Set<Submission> viewSubmissions() {
         return state.viewSubmissions();
+    }
+
+    /**
+     * Adds the id
+     * @param id the id
+     */
+    public void setId(@NonNull Long id) {
+        this.id = id;
     }
 
 }
