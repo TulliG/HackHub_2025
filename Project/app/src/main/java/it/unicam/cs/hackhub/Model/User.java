@@ -13,9 +13,9 @@ public class User {
 
     private String password;
 
-    private HackathonParticipation participation;
+    private HackathonParticipation participation = null;
 
-    private Team team;
+    private Team team = null;
 
     public User() {}
 
@@ -87,5 +87,9 @@ public class User {
      */
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

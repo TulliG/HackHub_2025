@@ -81,4 +81,8 @@ public class HackathonParticipation {
     public Hackathon getHackathon() {
         return hackathon;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
