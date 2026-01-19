@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.CommandPattern;
+package it.unicam.cs.hackhub.Model.Patterns.Command;
 
 /**
  * Class that execute a {@code Mentor} invite {@code Notification}.

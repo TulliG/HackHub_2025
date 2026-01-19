@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.BuilderPattern;
+package it.unicam.cs.hackhub.Model.Patterns.Builder;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +17,7 @@ public class HackathonBuilder implements Builder {
 
     private int prize;
 
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime creationDate;
 
     private LocalDateTime startDate;
 
@@ -95,6 +95,7 @@ public class HackathonBuilder implements Builder {
         this.organizer = organizer;
     }
 
+    // TODO: completare il getResult
     public Hackathon getResult() {
         return null;
     }

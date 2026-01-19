@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import it.unicam.cs.hackhub.Model.StatePattern.HackathonState;
+import it.unicam.cs.hackhub.Model.Patterns.State.HackathonState;
 
 /**
  * Class that defines an {@code Hackathon} inside the {@code Hackhub}
@@ -60,11 +60,9 @@ public class Hackathon {
 
     private class Calendar {
 
-        private Map<User, Set<Team>> appointments;
+        private Map<User, Set<Team>> appointments = new HashMap<>();
 
-        public Calendar() {
-            appointments = new HashMap<>();
-        }
+        public Calendar() { }
 
         public void addAppointment(User user, Team team) {
             Set<Team> teams = appointments.get(user);

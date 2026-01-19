@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.StatePattern;
+package it.unicam.cs.hackhub.Model.Patterns.State;
 
 import java.util.Set;
 

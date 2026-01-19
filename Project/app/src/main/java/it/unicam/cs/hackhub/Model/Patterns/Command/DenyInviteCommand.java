@@ -1,9 +1,9 @@
-package it.unicam.cs.hackhub.Model.CommandPattern;
+package it.unicam.cs.hackhub.Model.Patterns.Command;
 
 /**
- * Class that execute a {@code Team} invite {@code Notification}.
+ * Class that execute that decline a {@code Notification}.
  */
-public class AcceptTeamInviteCommand implements NotificationCommand {
+public class DenyInviteCommand implements NotificationCommand {
 
     @Override
     public void execute() {

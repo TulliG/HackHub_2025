@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.StatePattern;
+package it.unicam.cs.hackhub.Model.Patterns.State;
 
 import java.util.Set;
 
@@ -10,11 +10,11 @@ import it.unicam.cs.hackhub.Model.Entity.Team;
 import it.unicam.cs.hackhub.Model.Entity.User;
 
 /**
- * State that represents the registration state of an {@code Hackathon}.
+ * State that represents the finish state of an {@code Hackathon}.
  */
-public class RegistrationState extends HackathonState {
+public class ConcludedState extends HackathonState {
 
-    public RegistrationState(@NonNull Hackathon hackathon) {
+    public ConcludedState(@NonNull Hackathon hackathon) {
         super(hackathon);
     }
 
