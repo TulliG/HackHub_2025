@@ -79,4 +79,10 @@ public interface Builder {
      */
     public void setMaxTeamMembers(int m);
 
+    /**
+     * Set the {@code Hackathon}'s organizer.
+     * @param organizer the organizer
+     */
+    public void setOrganizer(User organizer);
+
 }

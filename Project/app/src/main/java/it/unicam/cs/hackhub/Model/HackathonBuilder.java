@@ -87,8 +87,13 @@ public class HackathonBuilder implements Builder {
         this.maxTeamMembers = m;
     }
 
+    @Override
+    public void setOrganizer(@NonNull User organizer) {
+        this.organizer = organizer;
+    }
+
     public Hackathon getResult() {
         return null;
     }
-    
+
 }

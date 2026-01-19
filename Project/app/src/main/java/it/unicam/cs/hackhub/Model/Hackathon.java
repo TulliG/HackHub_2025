@@ -71,7 +71,41 @@ public class Hackathon {
 
     }
 
-    public Hackathon() {}
+    /**
+     * Builds an {@code Hackathon}
+     * @param name the name
+     * @param location the location
+     * @param rules the rules
+     * @param prize the prize
+     * @param creationDate the creation date
+     * @param startDate the start date
+     * @param evaluationDate the evaluation date
+     * @param endingDate the ending date
+     * @param minTeams the minimum number of teams for the {@code Hackathon}
+     * @param maxTeams the maximum number of teams for the {@code Hackathon} 
+     * @param minTeamMembers the minimum number of team members for the {@code Team}
+     * @param maxTeamMembers the minimum number of team members for the {@code Team}
+     * @param organizer the organizer
+     */
+    public Hackathon(
+        String name, String location, String rules, int prize,
+        LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
+        LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
+        User organizer
+    ) {
+        this.name = name;
+        this.location = location;
+        this.prize = prize;
+        this.creationDate = creationDate;
+        this.startDate = startDate;
+        this.evaluationDate = evaluationDate;
+        this.endingDate = endingDate;
+        this.minTeams = minTeams;
+        this.maxTeams = maxTeams;
+        this.minTeamMembers = minTeamMembers;
+        this.maxTeamMembers = maxTeamMembers;
+        this.organizer = organizer;
+    }
 
     public boolean addJudge(@NonNull User user) {
         return state.addJudge(user);
