@@ -71,4 +71,12 @@ public class Team {
     public void removeMember(@NonNull User user) {
         members.remove(user);
     }
+
+    /**
+     * Set the id of the {@code Team}
+     * @param id the id
+     */
+    public void setId(@NonNull Long id) {
+        this.id = id;
+    }
 }
