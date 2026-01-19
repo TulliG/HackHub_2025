@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import it.unicam.cs.hackhub.Model.Team;
-import it.unicam.cs.hackhub.Model.User;
+import it.unicam.cs.hackhub.Model.Entity.Team;
+import it.unicam.cs.hackhub.Model.Entity.User;
 
 /**
  * Service class for managing {@code Team}s

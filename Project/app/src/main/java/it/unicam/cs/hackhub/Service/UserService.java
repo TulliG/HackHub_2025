@@ -1,8 +1,9 @@
 package it.unicam.cs.hackhub.Service;
 
-import it.unicam.cs.hackhub.Model.HackathonParticipation;
-import it.unicam.cs.hackhub.Model.Role;
-import it.unicam.cs.hackhub.Model.User;
+import it.unicam.cs.hackhub.Model.Entity.HackathonParticipation;
+import it.unicam.cs.hackhub.Model.Entity.User;
+import it.unicam.cs.hackhub.Model.Enums.Role;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
