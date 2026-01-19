@@ -78,7 +78,7 @@ public class TeamService {
 
     /**
      * Remove a {@code User} from the {@code Team}
-     * @param userg the {@code User}
+     * @param user the {@code User}
      * @throws IllegalStateException if tring to remove a {@code User} during an {@code Hackathon}
      */
     public void quitTeam(@NonNull User user) {
@@ -87,7 +87,7 @@ public class TeamService {
         for (Team team : repo.values())
             if (team.equals(user.getTeam())) {
                 team.removeMember(user);
-                if (team.getMembers().size() == 0)
+                if (team.getMembers().isEmpty())
                     repo.remove(team.getId());
                 return;
             }   
