@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model;
+package it.unicam.cs.hackhub.Model.Enums;
 
 /**
  * Enumerator that defines the {@code Role} of a {@code User}

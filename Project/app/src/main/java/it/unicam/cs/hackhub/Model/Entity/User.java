@@ -2,8 +2,6 @@ package it.unicam.cs.hackhub.Model.Entity;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import it.unicam.cs.hackhub.Model.HackathonParticipation;
-
 /**
  * Class that defines a {@code User} that is logged in the {@code HackHub}.
  * */

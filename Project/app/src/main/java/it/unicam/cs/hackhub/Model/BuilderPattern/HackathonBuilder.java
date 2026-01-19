@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model;
+package it.unicam.cs.hackhub.Model.BuilderPattern;
 
 import java.time.LocalDateTime;
 
