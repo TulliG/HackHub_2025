@@ -82,4 +82,24 @@ public abstract class HackathonState {
      */
     public abstract void sendPrize();
 
+    /**
+     * Reserve a call with a mentor for a {@code Team}
+     * @param mentor the mentor
+     * @param team the team
+     */
+    public abstract void reserveCall(@NonNull User mentor, @NonNull Team team);
+
+    /**
+     * Resert a {@code Team}
+     * @param team the team
+     */
+    public abstract void reportTeam(@NonNull Team team);
+
+    /**
+     * Show the appointments of a mentor
+     * @param mentor the mentor
+     * @return the teams with an appointment
+     */
+    public abstract Set<Team> showAppointments(@NonNull User mentor);
+
 }
