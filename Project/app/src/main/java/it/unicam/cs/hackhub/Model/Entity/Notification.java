@@ -48,6 +48,15 @@ public class Notification {
         this.targetId = targetId;
     }
 
+    public Notification(@NonNull User sender,@NonNull User receiver,@NonNull String message) {
+        if (message.trim().isEmpty())
+            throw new IllegalArgumentException("informational notification must have a message");
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message.trim();
+        this.type = NotificationType.INFO;
+    }
+
     /**
      * @return the sender
      */
@@ -81,5 +90,9 @@ public class Notification {
      */
     public Long getTargetId() {
         return targetId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

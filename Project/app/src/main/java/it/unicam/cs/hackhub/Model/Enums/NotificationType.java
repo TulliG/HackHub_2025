@@ -6,5 +6,6 @@ public enum NotificationType {
     TEAM_INVITE,
     JUDGE_INVITE,
     MENTOR_INVITE,
+    MENTOR_REPORT,
     SUPPORT_REQUEST;
 }
