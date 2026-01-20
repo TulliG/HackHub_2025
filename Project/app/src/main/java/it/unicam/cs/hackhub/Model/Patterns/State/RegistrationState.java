@@ -26,7 +26,7 @@ public class RegistrationState extends HackathonState {
     public boolean registerTeam(@NonNull Team t) {
         hackathon.registerTeam(t);
         for ( User u : t.getMembers()) {
-            u.setParticipation(new HackathonParticipation(u, hackathon, Role.TEAM_MEMBER));
+            u.setParticipation(new HackathonParticipation(hackathon, Role.TEAM_MEMBER));
         }
         return true;
     }
@@ -43,19 +43,19 @@ public class RegistrationState extends HackathonState {
     @Override
     public boolean addJudge(@NonNull User j) {
         hackathon.addJudge(j);
-        j.setParticipation(new HackathonParticipation(j,  hackathon, Role.JUDGE));
+        j.setParticipation(new HackathonParticipation(hackathon, Role.JUDGE));
         return true;
     }
 
     @Override
     public boolean addMentor(@NonNull User m) {
         hackathon.addMentor(m);
-        m.setParticipation( new HackathonParticipation(m, hackathon, Role.MENTOR));
+        m.setParticipation( new HackathonParticipation(hackathon, Role.MENTOR));
         return true;
     }
 
     @Override
-    public boolean submit(@NonNull Submission s) {
+    public boolean submit(@NonNull User u, @NonNull String content) {
         throw new UnsupportedOperationException("Can't submit during registration");
     }
 

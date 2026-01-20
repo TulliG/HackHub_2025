@@ -60,11 +60,12 @@ public abstract class HackathonState {
 
     /**
      * Add a {@code Submission} to the submission list of the {@code Hackathon}
-     * @param s the {@code Submission} of a {@code Team}
+     * @param u the {@code Submission} of a {@code Team} that does the upload
+     * @param content the content of the submission
      * @return {@code true} iff the {@code Team} adds its {@code Submission} to the 
      * {@code Hackathon}.
      */
-    public abstract boolean submit(@NonNull Submission s);
+    public abstract boolean submit(@NonNull User u, @NonNull String content);
 
     /**
      * View the {@code Submission} list of the {@code Hackathon}
@@ -100,7 +101,7 @@ public abstract class HackathonState {
      * Resert a {@code Team}
      * @param team the team
      */
-    public abstract void reportTeam(@NonNull Team team);
+    public abstract void reportTeam(@NonNull User mentor, @NonNull Team team);
 
     /**
      * Show the appointments of a mentor

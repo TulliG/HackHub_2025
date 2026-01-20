@@ -48,7 +48,7 @@ public class EvaluationState extends HackathonState {
     }
 
     @Override
-    public boolean submit(@NonNull Submission s) {
+    public boolean submit(@NonNull User u, @NonNull String content) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'submit'");
     }

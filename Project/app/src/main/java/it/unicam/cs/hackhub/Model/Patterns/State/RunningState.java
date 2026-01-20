@@ -2,12 +2,9 @@ package it.unicam.cs.hackhub.Model.Patterns.State;
 
 import java.util.Set;
 
+import it.unicam.cs.hackhub.Model.Entity.*;
+import it.unicam.cs.hackhub.Model.Enums.Role;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import it.unicam.cs.hackhub.Model.Entity.Hackathon;
-import it.unicam.cs.hackhub.Model.Entity.Submission;
-import it.unicam.cs.hackhub.Model.Entity.Team;
-import it.unicam.cs.hackhub.Model.Entity.User;
 
 /**
  * State that represents the running state of an {@code Hackathon}.
@@ -25,66 +22,60 @@ public class RunningState extends HackathonState {
 
     @Override
     public boolean registerTeam(@NonNull Team t) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'registerTeam'");
+        throw new UnsupportedOperationException("The hackathon is already strated");
     }
 
     @Override
     public boolean removeTeam(@NonNull Team t) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeTeam'");
+        throw new UnsupportedOperationException("The hackathon is already strated");
     }
 
     @Override
     public boolean addJudge(@NonNull User j) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addJudge'");
+        throw new UnsupportedOperationException("The hackathon is already strated");
     }
 
     @Override
     public boolean addMentor(@NonNull User m) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addMentor'");
+        hackathon.setMentor(m);
+        m.setParticipation( new HackathonParticipation(hackathon, Role.MENTOR));
+        return true;
     }
 
     @Override
-    public boolean submit(@NonNull Submission s) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'submit'");
+    public boolean submit(@NonNull User u, @NonNull String content) {
+        hackathon.addSubmission(new Submission(content, u.getTeam()));
+        return true;
     }
 
     @Override
     public Set<Submission> viewSubmissions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'viewSubmissions'");
+        return hackathon.getSubmissions();
     }
+
 
     @Override
     public void rateSubmission(@NonNull Submission s) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rateSubmission'");
+        throw new UnsupportedOperationException("Can't rate the submission during the" + this.getName());
     }
 
     @Override
     public void proclaimWinner(@NonNull Team t) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'proclaimWinner'");
+        throw new UnsupportedOperationException("Can't proclaim winner during the " + this.getName());
     }
 
     @Override
     public void sendPrize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendPrize'");
+        throw new UnsupportedOperationException("Can't send prize during the " + this.getName());
     }
 
     @Override
     public void reserveCall(@NonNull User mentor, @NonNull Team team) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reserveCall'");
+        // TODO vedere calendar attenzione
     }
 
     @Override
-    public void reportTeam(@NonNull Team team) {
+    public void reportTeam(@NonNull User mentor, @NonNull Team team) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'reportTeam'");
     }

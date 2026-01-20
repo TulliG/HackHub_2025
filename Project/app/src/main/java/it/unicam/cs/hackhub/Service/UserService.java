@@ -1,5 +1,6 @@
 package it.unicam.cs.hackhub.Service;
 
+import it.unicam.cs.hackhub.Model.Entity.Hackathon;
 import it.unicam.cs.hackhub.Model.Entity.HackathonParticipation;
 import it.unicam.cs.hackhub.Model.Entity.User;
 import it.unicam.cs.hackhub.Model.Enums.Role;
@@ -14,7 +15,6 @@ import java.util.Set;
 public class UserService {
 
     private static final Map<Long, User> userRepo = new HashMap<>();
-
     private static final Map<Long, HackathonParticipation> participationRepo = new HashMap<>();
 
     private Long newUserId = 1L;
@@ -29,12 +29,11 @@ public class UserService {
         return result;
     }
 
-    public HackathonParticipation createParticipation(@NonNull Long userId,@NonNull Long hackathonId ,@NonNull Role userRole) {
+    public HackathonParticipation createParticipation(@NonNull Long userId, @NonNull Hackathon hackathon, @NonNull Role userRole) {
         //TODO add || !hackathonRepo.containsKey(hackathonId)
         if (!userRepo.containsKey(userId))
             throw new IllegalArgumentException("not all entities exists");
-        //TODO add HackathonRepo.getById() instead of null
-        HackathonParticipation result = new HackathonParticipation(userRepo.get(userId), null);
+        HackathonParticipation result = new HackathonParticipation(hackathon, userRole);
         result.setId(newParticipationId);
         participationRepo.put(newParticipationId++, result);
         userRepo.get(userId).setParticipation(result);

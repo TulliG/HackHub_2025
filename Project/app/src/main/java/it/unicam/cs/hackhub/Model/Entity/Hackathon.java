@@ -82,16 +82,16 @@ public class Hackathon {
      * @param evaluationDate the evaluation date
      * @param endingDate the ending date
      * @param minTeams the minimum number of teams for the {@code Hackathon}
-     * @param maxTeams the maximum number of teams for the {@code Hackathon} 
+     * @param maxTeams the maximum number of teams for the {@code Hackathon}
      * @param minTeamMembers the minimum number of team members for the {@code Team}
      * @param maxTeamMembers the minimum number of team members for the {@code Team}
      * @param organizer the organizer
      */
     public Hackathon(
-        String name, String location, String rules, int prize,
-        LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
-        LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
-        User organizer
+            String name, String location, String rules, int prize,
+            LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
+            LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
+            User organizer
     ) {
         this.name = name;
         this.location = location;
@@ -183,6 +183,98 @@ public class Hackathon {
      */
     public Set<Team> showAppointments(@NonNull User mentor) {
         return state.showAppointments(mentor);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getRules() {
+        return rules;
+    }
+
+    public int getPrize() {
+        return prize;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEvaluationDate() {
+        return evaluationDate;
+    }
+
+    public LocalDateTime getEndingDate() {
+        return endingDate;
+    }
+
+    public int getMinTeams() {
+        return minTeams;
+    }
+
+    public int getMaxTeams() {
+        return maxTeams;
+    }
+
+    public int getMinTeamMembers() {
+        return minTeamMembers;
+    }
+
+    public int getMaxTeamMembers() {
+        return maxTeamMembers;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public Set<Submission> getSubmissions() {
+        return submissions;
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    public User getOrganizer() {
+        return organizer;
+    }
+
+    public User getJudge() {
+        return judge;
+    }
+
+    public Set<User> getMentors() {
+        return mentors;
+    }
+
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    public void setJudge(@NonNull User judge) {
+        this.judge = judge;
+    }
+
+    public void setMentor(@NonNull User mentor) {
+        this.mentors.add(mentor);
+    }
+
+    public void addSubmission(@NonNull Submission submission) {
+        submissions.add(submission);
     }
 
 }

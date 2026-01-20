@@ -9,19 +9,19 @@ public class Submission {
 
     private Long id;
 
-    private File content;
+    private String content;
 
     private Integer grade = null;
 
     private Team submissioner;
 
-    public Submission(@NonNull File content,@NonNull Team team) {
+    public Submission(@NonNull String content,@NonNull Team team) {
         //TODO Controllo file sottomissione
         this.content = content;
         this.submissioner = team;
     }
 
-    public File getContent() {
+    public String getContent() {
         return content;
     }
 
@@ -36,7 +36,6 @@ public class Submission {
     public Team getSubmissioner() {
         return submissioner;
     }
-
 
     /**
      * Adds the id
