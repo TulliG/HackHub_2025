@@ -151,4 +151,12 @@ public class Hackathon {
         this.id = id;
     }
 
+    /**
+     * Return the current {@code HackathonState}
+     * @return the state
+     */
+    public HackathonState getState() {
+        return state;
+    }
+
 }
