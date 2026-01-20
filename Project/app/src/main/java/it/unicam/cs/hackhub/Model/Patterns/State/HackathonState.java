@@ -20,6 +20,12 @@ public abstract class HackathonState {
     public HackathonState(@NonNull Hackathon hackathon) {
         this.hackathon = hackathon;
     }
+
+    /**
+     * Returns the name of the current state
+     * @return the string that represents the state's name
+     */
+    public abstract String getName();
     
     /**
      * Add a team to the {@code Hackathon}

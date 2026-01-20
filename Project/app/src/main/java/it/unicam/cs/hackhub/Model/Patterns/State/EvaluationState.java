@@ -19,6 +19,11 @@ public class EvaluationState extends HackathonState {
     }
 
     @Override
+    public String getName() {
+        return "Evaluation State";
+    }
+
+    @Override
     public boolean registerTeam(@NonNull Team t) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'registerTeam'");
