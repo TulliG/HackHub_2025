@@ -185,4 +185,83 @@ public class Hackathon {
         return state.showAppointments(mentor);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getRules() {
+        return rules;
+    }
+
+    public int getPrize() {
+        return prize;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEvaluationDate() {
+        return evaluationDate;
+    }
+
+    public LocalDateTime getEndingDate() {
+        return endingDate;
+    }
+
+    public int getMinTeams() {
+        return minTeams;
+    }
+
+    public int getMaxTeams() {
+        return maxTeams;
+    }
+
+    public int getMinTeamMembers() {
+        return minTeamMembers;
+    }
+
+    public int getMaxTeamMembers() {
+        return maxTeamMembers;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public Set<Submission> getSubmissions() {
+        return submissions;
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    public User getOrganizer() {
+        return organizer;
+    }
+
+    public User getJudge() {
+        return judge;
+    }
+
+    public Set<User> getMentors() {
+        return mentors;
+    }
+
+    public Set<Team> getTeams() {
+        return teams;
+    }
 }

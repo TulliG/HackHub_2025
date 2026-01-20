@@ -53,7 +53,8 @@ public class HackathonService {
         return null;
     }
 
-    public void reserveCall(@NonNull User user, @NonNull Team team, @NonNull Hackathon hackathon) {
+    public void reserveCall(@NonNull User sender, @NonNull User receiver) {
+        new NotificationService().sendSupportRequest(sender, receiver);
         return;
     }
 
