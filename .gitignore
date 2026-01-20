@@ -6,7 +6,10 @@
 *.vpp.lock
 
 # Temporary files
-tmp/
+bin/
+Project/app/bin/
+Project/app/build/
+Project/build/
 
 # macOS
 .DS_Store
