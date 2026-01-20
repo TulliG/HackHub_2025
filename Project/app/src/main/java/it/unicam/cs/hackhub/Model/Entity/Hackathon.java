@@ -159,4 +159,30 @@ public class Hackathon {
         return state;
     }
 
+    /**
+     * Adds a {@code Team} to the {@code Calendar} for the mentor
+     * @param mentor the mentor
+     * @param team the team
+     */
+    public void reserveCall(@NonNull User mentor, @NonNull Team team) {
+        state.reserveCall(mentor, team);
+    }
+
+    /**
+     * Reports a {@code Team}
+     * @param team the team
+     */
+    public void reportTeam(@NonNull Team team) {
+        state.reportTeam(team);
+    }
+
+    /**
+     * Shwo the appointments in the {@code Calendar} for the mentor
+     * @param mentor the mentor
+     * @return the teams with an appointment
+     */
+    public Set<Team> showAppointments(@NonNull User mentor) {
+        return state.showAppointments(mentor);
+    }
+
 }
