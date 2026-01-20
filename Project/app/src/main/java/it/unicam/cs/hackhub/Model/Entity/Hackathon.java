@@ -82,16 +82,16 @@ public class Hackathon {
      * @param evaluationDate the evaluation date
      * @param endingDate the ending date
      * @param minTeams the minimum number of teams for the {@code Hackathon}
-     * @param maxTeams the maximum number of teams for the {@code Hackathon}
+     * @param maxTeams the maximum number of teams for the {@code Hackathon} 
      * @param minTeamMembers the minimum number of team members for the {@code Team}
      * @param maxTeamMembers the minimum number of team members for the {@code Team}
      * @param organizer the organizer
      */
     public Hackathon(
-            String name, String location, String rules, int prize,
-            LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
-            LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
-            User organizer
+        String name, String location, String rules, int prize,
+        LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
+        LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
+        User organizer
     ) {
         this.name = name;
         this.location = location;
@@ -264,17 +264,4 @@ public class Hackathon {
     public Set<Team> getTeams() {
         return teams;
     }
-
-    public void setJudge(@NonNull User judge) {
-        this.judge = judge;
-    }
-
-    public void setMentor(@NonNull User mentor) {
-        this.mentors.add(mentor);
-    }
-
-    public void addSubmission(@NonNull Submission submission) {
-        submissions.add(submission);
-    }
-
 }

@@ -1,24 +1,24 @@
 package it.unicam.cs.hackhub.Service;
 
 import it.unicam.cs.hackhub.Model.Entity.Notification;
+import it.unicam.cs.hackhub.Model.Entity.Team;
 import it.unicam.cs.hackhub.Model.Entity.User;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class NotificationService {
 
     private static final Map<Long, Notification> notificationRepo = new HashMap<>();
-    private static Long newNotificationId = 1l;
+    private static Long newNotificationId = 1L;
 
     public void accept(@NonNull Notification notification) {
 
+        //TODO Implementation
+        deleteNotification(notification.getId());
     }
 
     public void deny(@NonNull Notification notification) {
@@ -29,53 +29,50 @@ public class NotificationService {
         createNotification(sender, receiver, message);
     }
 
+    public void sendInfo(@NonNull User receiver,@NonNull String message) {
+        createNotification(receiver, receiver, message);
+    }
+
     public void sendTeamInvite(@NonNull User sender,@NonNull User receiver) {
         if (sender.getTeam() == null)
             throw new IllegalArgumentException("the sender must be part of a team");
-        String message = sender.getUsername() + "invites you to join in his team: " + sender.getTeam().getName() + ".";
+        String message = sender.getUsername() + " invites you to join in his team.\n Team: " + sender.getTeam().getName();
         createNotification(sender, receiver, message, NotificationType.TEAM_INVITE, sender.getTeam().getId());
     }
 
-    //TODO refactor with Hackathon getters
     public void sendJudgeInvite(@NonNull User sender,@NonNull User receiver) {
         if (sender.getParticipation() == null || sender.getParticipation().getRole() != Role.ORGANIZER)
             throw new IllegalArgumentException("the sender must be the hackathon's ORGANIZER");
-        String message = sender.getUsername() + "invites you to staff as his hackathon's Judge\n  " + /*sender.getParticipation().getHackathon.getName() +*/ ".";
-        createNotification(sender, receiver, message, NotificationType.JUDGE_INVITE, sender.getTeam().getId()/*sender.getParticipation().getHackathon.getId()*/);
+        String message = sender.getUsername() + " invites you to staff as his hackathon's Judge.\n Hackathon: " + sender.getParticipation().getHackathon().getName();
+        createNotification(sender, receiver, message, NotificationType.JUDGE_INVITE, sender.getParticipation().getHackathon().getId());
     }
 
-
-    //TODO refactor with Hackathon getters
     public void sendMentorInvite(@NonNull User sender,@NonNull User receiver) {
         if (sender.getParticipation() == null || sender.getParticipation().getRole() != Role.ORGANIZER)
             throw new IllegalArgumentException("the sender must be the hackathon's ORGANIZER");
-        String message = sender.getUsername() + "invites you to staff as a hackathon's Mentor\n " + /*sender.getParticipation().getHackathon.getName() +*/ ".";
-        createNotification(sender, receiver, message, NotificationType.MENTOR_INVITE, sender.getTeam().getId()/*sender.getParticipation().getHackathon.getId()*/);
+        String message = sender.getUsername() + " invites you to staff as a hackathon's Mentor.\n Hackathon: " + sender.getParticipation().getHackathon().getName();
+        createNotification(sender, receiver, message, NotificationType.MENTOR_INVITE, sender.getParticipation().getHackathon().getId());
     }
 
-    //TODO refactor with Hackathon getters
-    //TODO implement teamId checks and logic
-    public void sendMentorReport(@NonNull User sender,@NonNull User receiver, Long teamId, String comment) {
+    public void sendMentorReport(@NonNull User sender,@NonNull Team team,@NonNull String comment) {
         if (sender.getParticipation() == null || sender.getParticipation().getRole() != Role.MENTOR)
-            throw new IllegalArgumentException("the sender must be a hackathon's MENTOR");
-        if (receiver.getParticipation() == null || sender.getParticipation().getRole() != Role.ORGANIZER)
-            throw new IllegalArgumentException("the receiver must be the hackathon's ORGANIZER");
-        if (!sender.getParticipation().getHackathon().equals(receiver.getParticipation().getHackathon()))
-            throw new IllegalArgumentException("the sender and receiver must participate in the same hackathon");
-        String message = sender.getUsername() + "has reported this team:\n " + comment + /*sender.getParticipation().getHackathon.getName() +*/ ".";
-        createNotification(sender, receiver, message, NotificationType.MENTOR_REPORT, sender.getTeam().getId()/*sender.getParticipation().getHackathon.getId()*/);
+            throw new IllegalArgumentException("the sender must be a hackathon's MENTOR");;
+        if (sender.getParticipation().getHackathon().getTeams().stream().noneMatch(t -> t.equals(team)))
+            throw new IllegalArgumentException("the is not present in the hackathon");
+
+        String message = sender.getUsername() + " has reported the team " + team.getName() + ":\n " + comment;
+        createNotification(sender, sender.getParticipation().getHackathon().getOrganizer(), message);
     }
 
-    //TODO refactor with Hackathon getters
     public void sendSupportRequest(@NonNull User sender,@NonNull User receiver) {
+        if (!sender.getParticipation().getHackathon().getId().equals(receiver.getParticipation().getHackathon().getId()))
+            throw new IllegalArgumentException("the sender and receiver must participate in the same hackathon");
         if (sender.getParticipation() == null || sender.getParticipation().getRole() != Role.TEAM_MEMBER)
             throw new IllegalArgumentException("the sender must be a hackathon's TEAM MEMBER");
         if (receiver.getParticipation() == null || sender.getParticipation().getRole() != Role.MENTOR)
             throw new IllegalArgumentException("the receiver must be a hackathon's MENTOR");
-        if (!sender.getParticipation().getHackathon().equals(receiver.getParticipation().getHackathon()))
-            throw new IllegalArgumentException("the sender and receiver must participate in the same hackathon");
-        String message = sender.getTeam() + " requested your support.";
-        createNotification(sender, receiver, message, NotificationType.SUPPORT_REQUEST, sender.getTeam().getId()/*sender.getParticipation().getHackathon.getId()*/);
+        String message = sender.getTeam().getName() + " requested your support.";
+        createNotification(sender, receiver, message, NotificationType.SUPPORT_REQUEST, sender.getParticipation().getHackathon().getId());
     }
 
     public void createNotification(@NonNull User sender,

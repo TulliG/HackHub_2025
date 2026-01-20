@@ -57,6 +57,10 @@ public class Notification {
         this.type = NotificationType.INFO;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     /**
      * @return the sender
      */
