@@ -84,10 +84,14 @@ public class ConcludedState extends HackathonState {
         throw new UnsupportedOperationException("Unimplemented method 'reportTeam'");
     }
 
-    @Override
     public Set<Team> reserveCall(@NonNull User mentor) {
+        return null;
+    }
+
+    @Override
+    public Set<Team> showAppointments(@NonNull User mentor) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reserveCall'");
+        throw new UnsupportedOperationException("Unimplemented method 'showAppointments'");
     }
     
 }
