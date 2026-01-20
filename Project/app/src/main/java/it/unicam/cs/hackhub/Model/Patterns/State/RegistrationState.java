@@ -2,17 +2,16 @@ package it.unicam.cs.hackhub.Model.Patterns.State;
 
 import java.util.Set;
 
+import it.unicam.cs.hackhub.Model.Entity.*;
+import it.unicam.cs.hackhub.Model.Enums.Role;
 import org.checkerframework.checker.nullness.qual.NonNull;
-
-import it.unicam.cs.hackhub.Model.Entity.Hackathon;
-import it.unicam.cs.hackhub.Model.Entity.Submission;
-import it.unicam.cs.hackhub.Model.Entity.Team;
-import it.unicam.cs.hackhub.Model.Entity.User;
 
 /**
  * State that represents the registration state of an {@code Hackathon}.
  */
 public class RegistrationState extends HackathonState {
+
+
 
     public RegistrationState(@NonNull Hackathon hackathon) {
         super(hackathon);
@@ -25,79 +24,78 @@ public class RegistrationState extends HackathonState {
 
     @Override
     public boolean registerTeam(@NonNull Team t) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'registerTeam'");
+        hackathon.registerTeam(t);
+        for ( User u : t.getMembers()) {
+            u.setParticipation(new HackathonParticipation(u, hackathon, Role.TEAM_MEMBER));
+        }
+        return true;
     }
 
     @Override
     public boolean removeTeam(@NonNull Team t) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeTeam'");
+        hackathon.removeTeam(t);
+        for ( User u : t.getMembers()) {
+            u.resetParticipation();
+        }
+        return true;
     }
 
     @Override
     public boolean addJudge(@NonNull User j) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addJudge'");
+        hackathon.addJudge(j);
+        j.setParticipation(new HackathonParticipation(j,  hackathon, Role.JUDGE));
+        return true;
     }
 
     @Override
     public boolean addMentor(@NonNull User m) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addMentor'");
+        hackathon.addMentor(m);
+        m.setParticipation( new HackathonParticipation(m, hackathon, Role.MENTOR));
+        return true;
     }
 
     @Override
     public boolean submit(@NonNull Submission s) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'submit'");
+        throw new UnsupportedOperationException("Can't submit during registration");
     }
 
     @Override
     public Set<Submission> viewSubmissions() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'viewSubmissions'");
+        throw new UnsupportedOperationException("Can't view submissions during registration");
     }
 
     @Override
     public void rateSubmission(@NonNull Submission s) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'rateSubmission'");
+        throw new UnsupportedOperationException("Can't rate submissions during registration");
     }
 
     @Override
     public void proclaimWinner(@NonNull Team t) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'proclaimWinner'");
+        throw new UnsupportedOperationException("Can't proclaim winner during registration");
     }
 
     @Override
     public void sendPrize() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendPrize'");
+        throw new UnsupportedOperationException("Can't send prize during registration");
     }
 
     @Override
     public void reserveCall(@NonNull User mentor, @NonNull Team team) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reserveCall'");
+        throw new UnsupportedOperationException("Can't reserve call during registration");
     }
 
     @Override
     public void reportTeam(@NonNull Team team) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reportTeam'");
+        throw new UnsupportedOperationException("Can't report team during registration");
     }
 
     public Set<Team> reserveCall(@NonNull User mentor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reserveCall'");
+        throw new UnsupportedOperationException("Can't report call during registration");
     }
 
     @Override
     public Set<Team> showAppointments(@NonNull User mentor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showAppointments'");
+        throw new UnsupportedOperationException("Can't view appointemnts during registration");
     }
     
 }

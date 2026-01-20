@@ -15,9 +15,10 @@ import it.unicam.cs.hackhub.Model.Entity.User;
  */
 public abstract class HackathonState {
 
-    private Hackathon hackathon;
+    protected Hackathon hackathon;
 
     public HackathonState(@NonNull Hackathon hackathon) {
+
         this.hackathon = hackathon;
     }
 

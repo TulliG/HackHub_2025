@@ -35,6 +35,11 @@ public class HackathonService {
     }
 
     public void registerTeam(@NonNull Hackathon hackathon, @NonNull Team team) {
+        // TODO: il team è iscritto a un altro hackathon?
+        for (User u : team.getMembers()) {
+            if (u.getParticipation() != null)
+                throw new IllegalArgumentException("The team is busy");
+        }
         for (Hackathon h : repo.values())
             if (h.equals(hackathon))
                 h.registerTeam(team);
