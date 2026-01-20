@@ -71,5 +71,27 @@ public class ConcludedState extends HackathonState {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'sendPrize'");
     }
+
+    @Override
+    public void reserveCall(@NonNull User mentor, @NonNull Team team) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reserveCall'");
+    }
+
+    @Override
+    public void reportTeam(@NonNull Team team) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reportTeam'");
+    }
+
+    public Set<Team> reserveCall(@NonNull User mentor) {
+        return null;
+    }
+
+    @Override
+    public Set<Team> showAppointments(@NonNull User mentor) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'showAppointments'");
+    }
     
 }
