@@ -85,9 +85,10 @@ public class RegistrationState extends HackathonState {
     }
 
     @Override
-    public void reportTeam(@NonNull Team team) {
-        throw new UnsupportedOperationException("Can't report team during registration");
+    public void reportTeam(@NonNull User mentor, @NonNull Team team) {
+
     }
+
 
     public Set<Team> reserveCall(@NonNull User mentor) {
         throw new UnsupportedOperationException("Can't report call during registration");

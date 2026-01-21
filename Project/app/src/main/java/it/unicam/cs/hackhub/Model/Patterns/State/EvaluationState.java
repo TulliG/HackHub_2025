@@ -84,10 +84,10 @@ public class EvaluationState extends HackathonState {
     }
 
     @Override
-    public void reportTeam(@NonNull Team team) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reportTeam'");
+    public void reportTeam(@NonNull User mentor, @NonNull Team team) {
+
     }
+
 
     public Set<Team> reserveCall(@NonNull User mentor) {
         // TODO Auto-generated method stub

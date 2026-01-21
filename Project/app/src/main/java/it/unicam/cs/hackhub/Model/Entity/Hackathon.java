@@ -58,6 +58,14 @@ public class Hackathon {
 
     private Set<Submission> submissions = new HashSet<>();
 
+    public void setMentor(@NonNull User m) {
+        this.mentors.add(m);
+    }
+
+    public void addSubmission(Submission submission) {
+        submissions.add(submission);
+    }
+
     private class Calendar {
 
         private Map<User, Set<Team>> appointments = new HashMap<>();
