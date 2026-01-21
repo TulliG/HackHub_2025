@@ -135,8 +135,8 @@ public class Hackathon {
         state.sendPrize();
     }
 
-    public boolean submit(@NonNull Submission submission) {
-        return state.submit(submission);
+    public boolean submit(@NonNull User user,@NonNull String content) {
+        return state.submit(user, content);
     }
 
     public Set<Submission> viewSubmissions() {
@@ -172,8 +172,8 @@ public class Hackathon {
      * Reports a {@code Team}
      * @param team the team
      */
-    public void reportTeam(@NonNull Team team) {
-        state.reportTeam(team);
+    public void reportTeam(@NonNull User mentor, @NonNull Team team) {
+        state.reportTeam(mentor, team);
     }
 
     /**
