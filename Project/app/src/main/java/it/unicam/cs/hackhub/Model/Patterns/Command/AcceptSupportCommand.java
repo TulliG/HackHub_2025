@@ -9,9 +9,7 @@ import it.unicam.cs.hackhub.Service.NotificationService;
  */
 public class AcceptSupportCommand implements NotificationCommand {
 
-    private final HackathonService hackathonService = new HackathonService();
     private final NotificationService notificationService = new NotificationService();
-
     private final Notification notification;
 
     public AcceptSupportCommand(Notification notification) {
@@ -20,7 +18,7 @@ public class AcceptSupportCommand implements NotificationCommand {
 
     @Override
     public void execute() {
-        hackathonService.reserveCall(notification.getReceiver(), notification.getSender());
+        new HackathonService().reserveCall(notification.getReceiver(), notification.getSender());
         String message = notification.getReceiver().getUsername() + " has accepted your request.";
         notification.getSender().getTeam()
                 .getMembers()

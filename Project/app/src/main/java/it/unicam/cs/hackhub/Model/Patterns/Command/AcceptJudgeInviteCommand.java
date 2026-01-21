@@ -13,7 +13,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class AcceptJudgeInviteCommand implements NotificationCommand {
 
-    private final HackathonService hackathonService = new HackathonService();
     private final NotificationService notificationService = new NotificationService();
     private final UserService userService = new UserService();
 
@@ -27,8 +26,8 @@ public class AcceptJudgeInviteCommand implements NotificationCommand {
 
     @Override
     public void execute() {
-        hackathonService.getById(notification.getTargetId()).addJudge(notification.getReceiver());
-        userService.createParticipation(notification.getReceiver().getId(), hackathonService.getById(notification.getTargetId()), Role.JUDGE);
+        new HackathonService().getById(notification.getTargetId()).addJudge(notification.getReceiver());
+        userService.createParticipation(notification.getReceiver().getId(), notification.getTargetId(), Role.JUDGE);
         String message = notification.getReceiver() + "has accepted your invite, now it's your hackathon's JUDGE.";
         notificationService.createNotification(notification.getReceiver(), notification.getSender(), message);
         notificationService.deleteNotification(notification.getId());
