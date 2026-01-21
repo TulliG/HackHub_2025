@@ -4,7 +4,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 
-//TODO Notification interface
 /**
  * Class that represents the notification inside the system.
  */
@@ -12,7 +11,6 @@ public class Notification {
     
     private Long id;
 
-    //TODO public record NotificationData?
     private User sender;
 
     private User receiver;
