@@ -20,6 +20,7 @@ import it.unicam.cs.hackhub.Model.Entity.User;
 public class HackathonService {
 
     private static final Map<Long, Hackathon> repo = new HashMap<>();
+
     private Long serialId = 1L;
     
     public void createHackathon() {
@@ -35,26 +36,14 @@ public class HackathonService {
     }
 
     public void registerTeam(@NonNull Hackathon hackathon, @NonNull Team team) {
-        // TODO: il team è iscritto a un altro hackathon?
-        for (User u : team.getMembers()) {
-            if (u.getParticipation() != null)
-                throw new IllegalArgumentException("The team is busy");
-        }
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                h.registerTeam(team);
+
     }
 
     public void cancelRegistration(@NonNull Hackathon hackathon, @NonNull Team team) {
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                h.removeTeam(team);
+
     }
 
     public Set<Submission> getSubmissions(@NonNull Hackathon hackathon) {
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                return h.viewSubmissions();
         return null;
     }
 
@@ -71,9 +60,7 @@ public class HackathonService {
     }
 
     public void rateSubmission(@NonNull Hackathon hackathon, @NonNull Submission submission) {
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                h.rateSubmission(submission);
+
     }
 
 }
