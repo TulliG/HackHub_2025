@@ -58,8 +58,8 @@ public class Team {
      * @param user the {@code User} to add
      */
     public void addMember(@NonNull User user) {
-        //TODO IllegalArgumentException?
-        if (user.getTeam() != null) return;
+        if (user.getTeam() != null)
+            throw new IllegalArgumentException("the user is already part of a team");
         members.add(user);
     }
 
