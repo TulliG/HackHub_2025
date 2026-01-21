@@ -63,7 +63,6 @@ public class User {
         return participation;
     }
 
-    //TODO public boolean isTeamMember()
     /**
      * @return the {@code User}'s {@code Team}
      */
