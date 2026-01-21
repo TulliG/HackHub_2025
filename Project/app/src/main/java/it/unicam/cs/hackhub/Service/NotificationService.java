@@ -5,6 +5,10 @@ import it.unicam.cs.hackhub.Model.Entity.Team;
 import it.unicam.cs.hackhub.Model.Entity.User;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Model.Enums.Role;
+import it.unicam.cs.hackhub.Model.Patterns.Command.AcceptJudgeInviteCommand;
+import it.unicam.cs.hackhub.Model.Patterns.Command.AcceptMentorInviteCommand;
+import it.unicam.cs.hackhub.Model.Patterns.Command.AcceptSupportCommand;
+import it.unicam.cs.hackhub.Model.Patterns.Command.AcceptTeamInviteCommand;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
@@ -16,13 +20,17 @@ public class NotificationService {
     private static Long newNotificationId = 1L;
 
     public void accept(@NonNull Notification notification) {
-
-        //TODO Implementation
+        switch (notification.getType()) {
+            case TEAM_INVITE -> new AcceptTeamInviteCommand(notification).execute();
+            case JUDGE_INVITE -> new AcceptJudgeInviteCommand(notification).execute();
+            case MENTOR_INVITE -> new AcceptMentorInviteCommand(notification).execute();
+            case SUPPORT_REQUEST -> new AcceptSupportCommand(notification).execute();
+        }
         deleteNotification(notification.getId());
     }
 
     public void deny(@NonNull Notification notification) {
-
+        deleteNotification(notification.getId());
     }
 
     public void sendInfo(@NonNull User sender,@NonNull User receiver,@NonNull String message) {
