@@ -1,6 +1,5 @@
 package it.unicam.cs.hackhub.Service;
 
-import it.unicam.cs.hackhub.Model.Entity.Hackathon;
 import it.unicam.cs.hackhub.Model.Entity.HackathonParticipation;
 import it.unicam.cs.hackhub.Model.Entity.User;
 import it.unicam.cs.hackhub.Model.Enums.Role;
@@ -29,15 +28,13 @@ public class UserService {
         return result;
     }
 
-    public HackathonParticipation createParticipation(@NonNull Long userId, @NonNull Hackathon hackathon, @NonNull Role userRole) {
-        //TODO add || !hackathonRepo.containsKey(hackathonId)
-        if (!userRepo.containsKey(userId))
+    public void createParticipation(@NonNull Long userId, @NonNull Long hackathonId, @NonNull Role userRole) {
+        if (!userRepo.containsKey(userId) || new HackathonService().getById(hackathonId) == null)
             throw new IllegalArgumentException("not all entities exists");
-        HackathonParticipation result = new HackathonParticipation(hackathon, userRole);
+        HackathonParticipation result = new HackathonParticipation(new HackathonService().getById(hackathonId), userRole);
         result.setId(newParticipationId);
         participationRepo.put(newParticipationId++, result);
         userRepo.get(userId).setParticipation(result);
-        return result;
     }
 
     public boolean removeUser(@NonNull Long id) {
