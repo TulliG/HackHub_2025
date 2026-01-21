@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import it.unicam.cs.hackhub.Model.Enums.State;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import it.unicam.cs.hackhub.Model.Patterns.State.HackathonState;
@@ -49,8 +50,7 @@ public class Hackathon {
 
     private Set<Team> teams = new HashSet<>();
 
-    //TODO fare il main
-    private HackathonState state;
+    private State state;
 
     private Team winner = null;
 
@@ -107,42 +107,6 @@ public class Hackathon {
         this.organizer = organizer;
     }
 
-    public boolean addJudge(@NonNull User user) {
-        return state.addJudge(user);
-    }
-
-    public boolean addMentor(@NonNull User user) {
-        return state.addMentor(user);
-    }
-
-    public void proclaimWinner(@NonNull Team team) {
-        state.proclaimWinner(team);
-    }
-
-    public void rateSubmission(@NonNull Submission submission) {
-        state.rateSubmission(submission);
-    }
-
-    public boolean registerTeam(@NonNull Team team) {
-        return state.registerTeam(team);
-    }
-
-    public boolean removeTeam(@NonNull Team team) {
-        return state.removeTeam(team);
-    }
-
-    public void sendPrize() {
-        state.sendPrize();
-    }
-
-    public boolean submit(@NonNull Submission submission) {
-        return state.submit(submission);
-    }
-
-    public Set<Submission> viewSubmissions() {
-        return state.viewSubmissions();
-    }
-
     /**
      * Adds the id
      * @param id the id
@@ -155,34 +119,8 @@ public class Hackathon {
      * Return the current {@code HackathonState}
      * @return the state
      */
-    public HackathonState getState() {
+    public State getState() {
         return state;
-    }
-
-    /**
-     * Adds a {@code Team} to the {@code Calendar} for the mentor
-     * @param mentor the mentor
-     * @param team the team
-     */
-    public void reserveCall(@NonNull User mentor, @NonNull Team team) {
-        state.reserveCall(mentor, team);
-    }
-
-    /**
-     * Reports a {@code Team}
-     * @param team the team
-     */
-    public void reportTeam(@NonNull Team team) {
-        state.reportTeam(team);
-    }
-
-    /**
-     * Shwo the appointments in the {@code Calendar} for the mentor
-     * @param mentor the mentor
-     * @return the teams with an appointment
-     */
-    public Set<Team> showAppointments(@NonNull User mentor) {
-        return state.showAppointments(mentor);
     }
 
     public Long getId() {
@@ -266,14 +204,17 @@ public class Hackathon {
     }
 
     public void setJudge(@NonNull User judge) {
+
         this.judge = judge;
     }
 
     public void setMentor(@NonNull User mentor) {
+
         this.mentors.add(mentor);
     }
 
     public void addSubmission(@NonNull Submission submission) {
+
         submissions.add(submission);
     }
 
