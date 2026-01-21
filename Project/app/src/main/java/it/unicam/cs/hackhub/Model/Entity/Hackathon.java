@@ -9,11 +9,10 @@ import java.util.Set;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import it.unicam.cs.hackhub.Model.Patterns.State.HackathonState;
-
-/**
- * Class that defines an {@code Hackathon} inside the {@code Hackhub}
- * */
+@SuppressWarnings({"FieldMayBeFinal", "unused"})
+/*
+  Class that defines an {@code Hackathon} inside the {@code Hackhub}
+  */
 public class Hackathon {
 
     private Long id;
@@ -54,22 +53,23 @@ public class Hackathon {
 
     private Team winner = null;
 
-    private Calendar calendar = new Calendar();
-
     private Set<Submission> submissions = new HashSet<>();
 
-    private class Calendar {
-
-        private Map<User, Set<Team>> appointments = new HashMap<>();
-
-        public Calendar() { }
-
-        public void addAppointment(User user, Team team) {
-            Set<Team> teams = appointments.get(user);
-            teams.add(team);
-        }
-
-    }
+//    private class Calendar {
+//
+//        private Map<User, Set<Team>> appointments = new HashMap<>();
+//
+//        public Calendar() { }
+//
+//        public void addAppointment(User user, Team team) {
+//            Set<Team> teams = appointments.get(user);
+//            teams.add(team);
+//        }
+//
+//        public Set<Team> showAppointments(User user) {
+//            return appointments.get(user);
+//        }
+//    }
 
     /**
      * Builds an {@code Hackathon}
@@ -175,10 +175,6 @@ public class Hackathon {
         return maxTeamMembers;
     }
 
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
     public Set<Submission> getSubmissions() {
         return submissions;
     }
@@ -217,5 +213,4 @@ public class Hackathon {
 
         submissions.add(submission);
     }
-
 }
