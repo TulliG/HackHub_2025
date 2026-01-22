@@ -3,11 +3,37 @@ package it.unicam.cs.hackhub.Model.Entity;
 
 public class Appointment {
 
-    Long id;
+    private Long id;
 
-    User user;
+    private User user;
 
-    Team team;
+    private Team team;
 
-    String description;
+    private String description;
+
+    public Appointment(User user, Team team, String description) {
+        this.user = user;
+        this.team = team;
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
