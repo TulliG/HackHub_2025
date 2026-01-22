@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
 
 import it.unicam.cs.hackhub.Model.Enums.State;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -54,6 +55,8 @@ public class Hackathon {
     private Team winner = null;
 
     private Set<Submission> submissions = new HashSet<>();
+
+    private Set<Appointment> appointments = new HashSet<>();
 
     /**
      * Builds an {@code Hackathon}
@@ -173,7 +176,12 @@ public class Hackathon {
 
     public Set<Team> getTeams() {
         return teams;
-    }    /**
+    }
+
+    public Set<Appointment> getAppointments(User user) {
+        return appointments.stream().filter(a -> a.getUser().equals(user)).collect(Collector.toSet());
+
+    /**
      * Adds the id
      * @param id the id
      */

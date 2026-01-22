@@ -1,8 +1,8 @@
 package it.unicam.cs.hackhub.Repository;
 
 import it.unicam.cs.hackhub.Model.Entity.Hackathon;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,5 +23,9 @@ public class HackathonRepository {
 
     public void remove(Long id) {
         repo.remove(id);
+    }
+
+    public Collection<Hackathon> getAll() {
+        return repo.values();
     }
 }

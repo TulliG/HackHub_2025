@@ -21,6 +21,10 @@ public class Appointment {
         return id;
     }
 
+    /**
+     * Return the mentor
+     * @return the mentor
+     */
     public User getUser() {
         return user;
     }
