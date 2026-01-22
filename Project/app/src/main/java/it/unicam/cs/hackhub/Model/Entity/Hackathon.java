@@ -55,22 +55,6 @@ public class Hackathon {
 
     private Set<Submission> submissions = new HashSet<>();
 
-//    private class Calendar {
-//
-//        private Map<User, Set<Team>> appointments = new HashMap<>();
-//
-//        public Calendar() { }
-//
-//        public void addAppointment(User user, Team team) {
-//            Set<Team> teams = appointments.get(user);
-//            teams.add(team);
-//        }
-//
-//        public Set<Team> showAppointments(User user) {
-//            return appointments.get(user);
-//        }
-//    }
-
     /**
      * Builds an {@code Hackathon}
      * @param name the name
@@ -105,14 +89,6 @@ public class Hackathon {
         this.minTeamMembers = minTeamMembers;
         this.maxTeamMembers = maxTeamMembers;
         this.organizer = organizer;
-    }
-
-    /**
-     * Adds the id
-     * @param id the id
-     */
-    public void setId(@NonNull Long id) {
-        this.id = id;
     }
 
     /**
@@ -197,6 +173,12 @@ public class Hackathon {
 
     public Set<Team> getTeams() {
         return teams;
+    }    /**
+     * Adds the id
+     * @param id the id
+     */
+    public void setId(@NonNull Long id) {
+        this.id = id;
     }
 
     public void setJudge(@NonNull User judge) {
@@ -209,8 +191,16 @@ public class Hackathon {
         this.mentors.add(mentor);
     }
 
+    public void addTeam(@NonNull Team team) {
+        teams.add(team);
+    }
+
     public void addSubmission(@NonNull Submission submission) {
 
         submissions.add(submission);
+    }
+
+    public void removeTeam(@NonNull Team team) {
+        teams.remove(team);
     }
 }
