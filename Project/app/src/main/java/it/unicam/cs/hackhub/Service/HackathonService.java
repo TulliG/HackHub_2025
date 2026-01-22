@@ -37,7 +37,7 @@ public class HackathonService {
     }
 
     public Set<Appointment> getAppointments(Long hackathonId, Long userId) {
-        return hackathonRepository.get(hackathonId);
+        return hackathonRepository.get(hackathonId).getAppointments(userRepository.get(userId));
     }
 
     public void put(Hackathon hackathon) {
