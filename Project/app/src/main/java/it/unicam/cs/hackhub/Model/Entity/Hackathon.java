@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import it.unicam.cs.hackhub.Model.Enums.State;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -179,7 +179,8 @@ public class Hackathon {
     }
 
     public Set<Appointment> getAppointments(User user) {
-        return appointments.stream().filter(a -> a.getUser().equals(user)).collect(Collector.toSet());
+        return appointments.stream().filter(a -> a.getUser().equals(user)).collect(Collectors.toSet());
+    }
 
     /**
      * Adds the id
