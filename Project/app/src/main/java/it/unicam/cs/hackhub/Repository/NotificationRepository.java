@@ -1,8 +1,6 @@
 package it.unicam.cs.hackhub.Repository;
 
-import it.unicam.cs.hackhub.Model.Entity.Hackathon;
 import it.unicam.cs.hackhub.Model.Entity.Notification;
-import it.unicam.cs.hackhub.Model.Entity.Team;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +14,9 @@ public class NotificationRepository {
         return repo.get(id);
     }
 
-    public Notification put(Notification u) {
+    public void put(Notification u) {
         if (u.getId() == null) u.setId(serialId++);
         repo.put(u.getId(), u);
-        return u;
     }
 
     public void remove(Long id) {
