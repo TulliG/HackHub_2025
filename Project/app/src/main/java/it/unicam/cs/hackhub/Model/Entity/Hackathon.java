@@ -178,8 +178,8 @@ public class Hackathon {
         return teams;
     }
 
-    public Set<Appointment> getAppointments(User user) {
-        return appointments.stream().filter(a -> a.getUser().equals(user)).collect(Collectors.toSet());
+    public Set<Appointment> getAppointments(User mentor) {
+        return appointments.stream().filter(a -> a.getUser().equals(mentor)).collect(Collectors.toSet());
     }
 
     /**
