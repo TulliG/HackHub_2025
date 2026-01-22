@@ -7,7 +7,7 @@ import java.io.File;
 
 public class Submission {
 
-    private Long id;
+    private Long id = null;
 
     private String content;
 
@@ -35,6 +35,10 @@ public class Submission {
 
     public Team getSubmissioner() {
         return submissioner;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     /**
