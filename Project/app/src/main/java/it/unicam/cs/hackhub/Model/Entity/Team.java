@@ -11,7 +11,7 @@ import java.util.Set;
  * */
 public class Team {
 
-    private Long id;
+    private Long id = null;
 
     private String name;
 
