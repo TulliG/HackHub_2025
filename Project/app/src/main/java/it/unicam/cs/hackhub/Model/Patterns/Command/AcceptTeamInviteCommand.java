@@ -11,7 +11,6 @@ import it.unicam.cs.hackhub.Service.TeamService;
 public class AcceptTeamInviteCommand implements NotificationCommand {
 
     private final TeamService teamService = new TeamService();
-    private final NotificationService notificationService = new NotificationService();
 
     private final Notification notification;
 
@@ -24,7 +23,6 @@ public class AcceptTeamInviteCommand implements NotificationCommand {
     @Override
     public void execute() {
         teamService.addMember(notification.getReceiver(), teamService.getById(notification.getTargetId()));
-        notificationService.deleteNotification(notification.getId());
     }
     
 }

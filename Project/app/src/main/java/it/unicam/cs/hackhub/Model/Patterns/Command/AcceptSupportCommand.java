@@ -1,6 +1,7 @@
 package it.unicam.cs.hackhub.Model.Patterns.Command;
 
 import it.unicam.cs.hackhub.Model.Entity.Notification;
+import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Service.HackathonService;
 import it.unicam.cs.hackhub.Service.NotificationService;
 
@@ -9,10 +10,11 @@ import it.unicam.cs.hackhub.Service.NotificationService;
  */
 public class AcceptSupportCommand implements NotificationCommand {
 
-    private final NotificationService notificationService = new NotificationService();
     private final Notification notification;
 
     public AcceptSupportCommand(Notification notification) {
+        if (notification.getType() != NotificationType.SUPPORT_REQUEST)
+            throw new IllegalArgumentException("this command is for requesting support only");
         this.notification = notification;
     }
 
@@ -22,7 +24,6 @@ public class AcceptSupportCommand implements NotificationCommand {
         String message = notification.getReceiver().getUsername() + " has accepted your request.";
         notification.getSender().getTeam()
                 .getMembers()
-                .forEach(m -> notificationService.sendInfo(notification.getReceiver(), m, message));
-        notificationService.deleteNotification(notification.getId());
+                .forEach(m -> new NotificationService().sendInfo(notification.getReceiver(), m, message));
     }
 }

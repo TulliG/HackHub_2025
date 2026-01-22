@@ -13,9 +13,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class AcceptMentorInviteCommand implements NotificationCommand {
 
-    private final NotificationService notificationService = new NotificationService();
-    private final UserService userService = new UserService();
-
     private final Notification notification;
 
     public AcceptMentorInviteCommand(@NonNull Notification notification) {
@@ -27,10 +24,9 @@ public class AcceptMentorInviteCommand implements NotificationCommand {
     @Override
     public void execute() {
         new HackathonService().getById(notification.getTargetId()).addMentor(notification.getReceiver());
-        userService.createParticipation(notification.getReceiver().getId(), notification.getTargetId(), Role.MENTOR);
+        new UserService().createParticipation(notification.getReceiver().getId(), notification.getTargetId(), Role.MENTOR);
         String message = notification.getReceiver() + "has accepted your invite, now it's one of your hackathon's MENTOR.";
-        notificationService.createNotification(notification.getReceiver(), notification.getSender(), message);
-        notificationService.deleteNotification(notification.getId());
+        new NotificationService().createNotification(notification.getReceiver(), notification.getSender(), message);
     }
     
 }
