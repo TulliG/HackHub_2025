@@ -10,7 +10,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import it.unicam.cs.hackhub.Model.Entity.Hackathon;
 import it.unicam.cs.hackhub.Model.Entity.Submission;
 import it.unicam.cs.hackhub.Model.Entity.Team;
-import it.unicam.cs.hackhub.Model.Entity.User;
 
 // TODO aggiungere il CLOCK!!!
 
@@ -19,8 +18,15 @@ import it.unicam.cs.hackhub.Model.Entity.User;
  */
 public class HackathonService {
 
+    private final TeamService teamService;
+
     private static final Map<Long, Hackathon> repo = new HashMap<>();
+
     private Long serialId = 1L;
+
+    public HackathonService() {
+        teamService = new TeamService();
+    }
     
     public void createHackathon() {
 
@@ -34,47 +40,36 @@ public class HackathonService {
         return repo.get(id);
     }
 
-    public void registerTeam(@NonNull Hackathon hackathon, @NonNull Team team) {
-        // TODO: il team è iscritto a un altro hackathon?
-        for (User u : team.getMembers()) {
-            if (u.getParticipation() != null)
-                throw new IllegalArgumentException("The team is busy");
-        }
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                h.registerTeam(team);
+    public void registerTeam(@NonNull Long hackathonId, @NonNull Long teamId) {
+        Hackathon hackathon = repo.get(hackathonId);
+        hackathon.addTeam(teamService.getById(teamId));
     }
 
-    public void cancelRegistration(@NonNull Hackathon hackathon, @NonNull Team team) {
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                h.removeTeam(team);
+    public void cancelRegistration(@NonNull Long hackathonId, @NonNull Long teamId) {
+        Hackathon hackathon = repo.get(hackathonId);
+        hackathon.removeTeam(teamService.getById(teamId));
     }
 
-    public Set<Submission> getSubmissions(@NonNull Hackathon hackathon) {
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                return h.viewSubmissions();
-        return null;
+    public Set<Submission> getSubmissions(@NonNull Long hackathonId) {
+        return getById(hackathonId).getSubmissions();
     }
 
-    public void reserveCall(@NonNull User sender, @NonNull User receiver) {
-        new NotificationService().sendSupportRequest(sender, receiver);
+    public void reserveCall(@NonNull Long senderId, @NonNull Long receiverId) {
+        //new NotificationService().sendSupportRequest(UserService.getById(senderId), UserService.getById(senderId));
         return;
     }
 
-    public void reportTeam(@NonNull Team team, @NonNull Hackathon hackathon) {
+    public void reportTeam(@NonNull Long teamId, @NonNull Long hackathonId) {
         return;
     }
 
-    public Set<Team> showAppointments(@NonNull Hackathon hackathon, @NonNull User mentor) {
+    public Set<Team> showAppointments(@NonNull Long hackathonId, @NonNull Long mentorId) {
         return null;
     }
 
-    public void rateSubmission(@NonNull Hackathon hackathon, @NonNull Submission submission) {
-        for (Hackathon h : repo.values())
-            if (h.equals(hackathon))
-                h.rateSubmission(submission);
+    public void rateSubmission(@NonNull Long hackathonId, @NonNull Long submissionId) {
+        Hackathon hackathon = getById(hackathonId);
+        
     }
 
 }

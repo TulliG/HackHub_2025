@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import it.unicam.cs.hackhub.Model.Enums.State;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import it.unicam.cs.hackhub.Model.Patterns.State.HackathonState;
-
-/**
- * Class that defines an {@code Hackathon} inside the {@code Hackhub}
- * */
+@SuppressWarnings({"FieldMayBeFinal", "unused"})
+/*
+  Class that defines an {@code Hackathon} inside the {@code Hackhub}
+  */
 public class Hackathon {
 
     private Long id;
@@ -49,35 +49,11 @@ public class Hackathon {
 
     private Set<Team> teams = new HashSet<>();
 
-    //TODO fare il main
-    private HackathonState state;
+    private State state;
 
     private Team winner = null;
 
-    private Calendar calendar = new Calendar();
-
     private Set<Submission> submissions = new HashSet<>();
-
-    public void setMentor(@NonNull User m) {
-        this.mentors.add(m);
-    }
-
-    public void addSubmission(Submission submission) {
-        submissions.add(submission);
-    }
-
-    private class Calendar {
-
-        private Map<User, Set<Team>> appointments = new HashMap<>();
-
-        public Calendar() { }
-
-        public void addAppointment(User user, Team team) {
-            Set<Team> teams = appointments.get(user);
-            teams.add(team);
-        }
-
-    }
 
     /**
      * Builds an {@code Hackathon}
@@ -90,16 +66,16 @@ public class Hackathon {
      * @param evaluationDate the evaluation date
      * @param endingDate the ending date
      * @param minTeams the minimum number of teams for the {@code Hackathon}
-     * @param maxTeams the maximum number of teams for the {@code Hackathon} 
+     * @param maxTeams the maximum number of teams for the {@code Hackathon}
      * @param minTeamMembers the minimum number of team members for the {@code Team}
      * @param maxTeamMembers the minimum number of team members for the {@code Team}
      * @param organizer the organizer
      */
     public Hackathon(
-        String name, String location, String rules, int prize,
-        LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
-        LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
-        User organizer
+            String name, String location, String rules, int prize,
+            LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
+            LocalDateTime endingDate, int minTeams, int maxTeams, int minTeamMembers, int maxTeamMembers,
+            User organizer
     ) {
         this.name = name;
         this.location = location;
@@ -115,82 +91,12 @@ public class Hackathon {
         this.organizer = organizer;
     }
 
-    public boolean addJudge(@NonNull User user) {
-        return state.addJudge(user);
-    }
-
-    public boolean addMentor(@NonNull User user) {
-        return state.addMentor(user);
-    }
-
-    public void proclaimWinner(@NonNull Team team) {
-        state.proclaimWinner(team);
-    }
-
-    public void rateSubmission(@NonNull Submission submission) {
-        state.rateSubmission(submission);
-    }
-
-    public boolean registerTeam(@NonNull Team team) {
-        return state.registerTeam(team);
-    }
-
-    public boolean removeTeam(@NonNull Team team) {
-        return state.removeTeam(team);
-    }
-
-    public void sendPrize() {
-        state.sendPrize();
-    }
-
-    public boolean submit(@NonNull User user,@NonNull String content) {
-        return state.submit(user, content);
-    }
-
-    public Set<Submission> viewSubmissions() {
-        return state.viewSubmissions();
-    }
-
-    /**
-     * Adds the id
-     * @param id the id
-     */
-    public void setId(@NonNull Long id) {
-        this.id = id;
-    }
-
     /**
      * Return the current {@code HackathonState}
      * @return the state
      */
-    public HackathonState getState() {
+    public State getState() {
         return state;
-    }
-
-    /**
-     * Adds a {@code Team} to the {@code Calendar} for the mentor
-     * @param mentor the mentor
-     * @param team the team
-     */
-    public void reserveCall(@NonNull User mentor, @NonNull Team team) {
-        state.reserveCall(mentor, team);
-    }
-
-    /**
-     * Reports a {@code Team}
-     * @param team the team
-     */
-    public void reportTeam(@NonNull User mentor, @NonNull Team team) {
-        state.reportTeam(mentor, team);
-    }
-
-    /**
-     * Shwo the appointments in the {@code Calendar} for the mentor
-     * @param mentor the mentor
-     * @return the teams with an appointment
-     */
-    public Set<Team> showAppointments(@NonNull User mentor) {
-        return state.showAppointments(mentor);
     }
 
     public Long getId() {
@@ -245,10 +151,6 @@ public class Hackathon {
         return maxTeamMembers;
     }
 
-    public Calendar getCalendar() {
-        return calendar;
-    }
-
     public Set<Submission> getSubmissions() {
         return submissions;
     }
@@ -271,5 +173,34 @@ public class Hackathon {
 
     public Set<Team> getTeams() {
         return teams;
+    }    /**
+     * Adds the id
+     * @param id the id
+     */
+    public void setId(@NonNull Long id) {
+        this.id = id;
+    }
+
+    public void setJudge(@NonNull User judge) {
+
+        this.judge = judge;
+    }
+
+    public void setMentor(@NonNull User mentor) {
+
+        this.mentors.add(mentor);
+    }
+
+    public void addTeam(@NonNull Team team) {
+        teams.add(team);
+    }
+
+    public void addSubmission(@NonNull Submission submission) {
+
+        submissions.add(submission);
+    }
+
+    public void removeTeam(@NonNull Team team) {
+        teams.remove(team);
     }
 }

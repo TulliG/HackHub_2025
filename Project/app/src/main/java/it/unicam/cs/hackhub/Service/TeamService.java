@@ -18,6 +18,8 @@ public class TeamService {
     private Map<Long, Team> repo = new HashMap<>();
     private Long serialId = 1L;
 
+    public TeamService() {}
+
     /**
      * Return all teams
      * @return the teams

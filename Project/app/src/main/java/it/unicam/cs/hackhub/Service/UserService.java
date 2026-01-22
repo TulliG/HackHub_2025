@@ -45,7 +45,7 @@ public class UserService {
         return participationRepo.remove(id) != null;
     }
 
-    public User getUserById(@NonNull Long id) {
+    public User getById(@NonNull Long id) {
         return userRepo.get(id);
     }
 
