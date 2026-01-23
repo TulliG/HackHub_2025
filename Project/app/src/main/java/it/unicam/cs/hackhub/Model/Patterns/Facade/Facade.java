@@ -7,6 +7,10 @@ public class Facade {
 
     }
 
+    public void sendNotification() {
+        //User sender, User receiver, String message
+    }
+
     public void acceptTeamInvite() {
         //TODO available user check
     }
