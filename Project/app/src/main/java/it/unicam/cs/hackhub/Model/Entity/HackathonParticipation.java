@@ -8,6 +8,8 @@ public class HackathonParticipation {
 
     private Long id;
 
+    private User user;
+
     private Role role;
 
     private Hackathon hackathon;
@@ -20,7 +22,8 @@ public class HackathonParticipation {
      * @param hackathon the {@code Hackathon}
      * @param role the user's role in the hackathon
      */
-    public HackathonParticipation(@NonNull Hackathon hackathon, Role role) {
+    public HackathonParticipation(@NonNull User user, @NonNull Hackathon hackathon, Role role) {
+        this.user = user;
         this.role = role;
         this.hackathon = hackathon;
     }
@@ -30,6 +33,13 @@ public class HackathonParticipation {
      */
     public Long getId() {
         return id;
+    }
+
+    /**
+     * @return the {@code HackathonParticipation}'s {@code User}
+     */
+    public User getUser() {
+        return user;
     }
 
     /**
