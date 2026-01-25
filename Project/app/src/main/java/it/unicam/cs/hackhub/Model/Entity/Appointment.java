@@ -5,14 +5,14 @@ public class Appointment {
 
     private Long id;
 
-    private User user;
+    private User mentor;
 
     private Team team;
 
     private String description;
 
-    public Appointment(User user, Team team, String description) {
-        this.user = user;
+    public Appointment(User mentor, Team team, String description) {
+        this.mentor = mentor;
         this.team = team;
         this.description = description;
     }
@@ -25,8 +25,8 @@ public class Appointment {
      * Return the mentor
      * @return the mentor
      */
-    public User getUser() {
-        return user;
+    public User getMentor() {
+        return mentor;
     }
 
     public Team getTeam() {

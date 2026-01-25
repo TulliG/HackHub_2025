@@ -1,9 +1,7 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -179,7 +177,7 @@ public class Hackathon {
     }
 
     public Set<Appointment> getAppointments(User mentor) {
-        return appointments.stream().filter(a -> a.getUser().equals(mentor)).collect(Collectors.toSet());
+        return appointments.stream().filter(a -> a.getMentor().equals(mentor)).collect(Collectors.toSet());
     }
 
     /**
