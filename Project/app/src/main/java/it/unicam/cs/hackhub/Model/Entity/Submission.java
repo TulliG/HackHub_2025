@@ -1,14 +1,15 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
-
-
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.NonNull;
 import lombok.Getter;
-
-import java.io.File;
+import org.springframework.data.annotation.Id;
 
 public class Submission {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id = null;
 
@@ -29,14 +30,6 @@ public class Submission {
 
     public void setGrade(Integer grade) {
         this.grade = Math.clamp(grade, 1, 10);
-    }
-
-    /**
-     * Adds the id
-     * @param id the id
-     */
-    public void setId(@NonNull Long id) {
-        this.id = id;
     }
 
 }

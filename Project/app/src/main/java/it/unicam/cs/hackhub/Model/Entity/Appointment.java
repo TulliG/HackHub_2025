@@ -1,11 +1,14 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
-import lombok.NonNull;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 public class Appointment {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
 

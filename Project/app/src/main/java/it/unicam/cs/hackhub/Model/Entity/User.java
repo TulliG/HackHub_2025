@@ -1,16 +1,20 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 /**
  * Class that defines a {@code User} that is logged in the {@code HackHub}.
  * */
 public class User {
 
-    @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
 

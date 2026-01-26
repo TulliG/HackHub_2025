@@ -1,6 +1,10 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
 import lombok.NonNull;
+import lombok.Getter;
+import org.springframework.data.annotation.Id;
 
 import it.unicam.cs.hackhub.Model.Enums.Role;
 

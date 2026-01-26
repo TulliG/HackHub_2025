@@ -3,12 +3,13 @@ package it.unicam.cs.hackhub.Model.Entity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import it.unicam.cs.hackhub.Model.Enums.State;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.NonNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 @SuppressWarnings({"FieldMayBeFinal", "unused"})
 /*
@@ -16,6 +17,8 @@ import lombok.Setter;
   */
 public class Hackathon {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
 

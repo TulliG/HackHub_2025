@@ -1,15 +1,20 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.NonNull;
 import lombok.Getter;
 
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
+import org.springframework.data.annotation.Id;
 
 /**
  * Class that represents the notification inside the system.
  */
 public class Notification {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
 
@@ -62,7 +67,4 @@ public class Notification {
         this.type = NotificationType.INFO;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

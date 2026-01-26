@@ -1,8 +1,11 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import lombok.NonNull;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +16,8 @@ import java.util.Set;
  * */
 public class Team {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id = null;
 
@@ -56,11 +61,4 @@ public class Team {
         members.remove(user);
     }
 
-    /**
-     * Set the id of the {@code Team}
-     * @param id the id
-     */
-    public void setId(@NonNull Long id) {
-        this.id = id;
-    }
 }
