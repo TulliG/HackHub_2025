@@ -8,11 +8,11 @@ import lombok.NonNull;
  */
 public class TeamService {
 
-    private final TeamRepository repo = new TeamRepository();
-
+    private final TeamRepository teamRepository;
     private final UserService userService;
 
-    public TeamService(UserService userService) {
+    public TeamService(TeamRepository teamRepository, UserService userService) {
+        this.teamRepository = teamRepository;
         this.userService = userService;
     }
 
