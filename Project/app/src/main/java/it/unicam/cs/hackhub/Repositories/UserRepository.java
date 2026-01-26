@@ -1,32 +1,12 @@
 package it.unicam.cs.hackhub.Repositories;
 
 import it.unicam.cs.hackhub.Model.Entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserRepository {
-
-    private static final Map<Long, User> repo = new HashMap<>();
-    private static Long serialId = 1L;
-
-    public User get(Long id) {
-        return repo.get(id);
-    }
-
-    public List<User> getAll() {
-        return repo.values().stream().toList();
-    }
-
-    public User put(User u) {
-        if (u.getId() == null) u.setId(serialId++);
-        repo.put(u.getId(), u);
-        return u;
-    }
-
-    public void remove(Long id) {
-        repo.remove(id);
-    }
+public interface UserRepository extends JpaRepository<User,Long> {
 
 }

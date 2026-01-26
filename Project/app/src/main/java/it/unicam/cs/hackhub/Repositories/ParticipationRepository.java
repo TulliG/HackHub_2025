@@ -4,23 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.unicam.cs.hackhub.Model.Entity.HackathonParticipation;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public class ParticipationRepository {
+public interface ParticipationRepository extends JpaRepository<HackathonParticipation,Long> {
 
-    private static final Map<Long, HackathonParticipation> repo = new HashMap<>();
-    private static Long serialId = 1L;
-
-    public HackathonParticipation get(Long id) {
-        return repo.get(id);
-    }
-
-    public void put(HackathonParticipation hp) {
-        if (hp.getId() == null) hp.setId(serialId++);
-        repo.put(hp.getId(), hp);
-    }
-
-    public void remove(Long id) {
-        repo.remove(id);
-    }
-    
 }
