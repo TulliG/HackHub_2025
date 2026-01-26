@@ -1,7 +1,8 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import lombok.NonNull;
 
 import java.io.File;
 

@@ -1,20 +1,30 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * Class that defines a {@code User} that is logged in the {@code HackHub}.
  * */
 public class User {
 
+    @Setter
+    @Getter
     private Long id;
 
+    @Getter
     private String username;
 
     private String password;
 
+    @Setter
+    @Getter
     private HackathonParticipation participation = null;
 
+    @Setter
+    @Getter
     private Team team = null;
 
     public User() {}
@@ -25,25 +35,11 @@ public class User {
      * @param username the {@code User}'s username
      * @param password the {@code User}'s password
      */
-    public User(@NonNull String username,@NonNull String password) {
+    public User(@NonNull String username, @NonNull String password) {
         if (username.trim().isEmpty() || password.trim().isEmpty())
             throw new IllegalArgumentException("Invalid username and/or password");
         this.username = username.trim();
         this.password = password.trim();
-    }
-
-    /**
-     * @return the {@code User}'s password
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @return the {@code User}'s username
-     */
-    public String getUsername() {
-        return username;
     }
 
     /**
@@ -54,42 +50,6 @@ public class User {
      */
     public boolean isPasswordMatch(String password) {
         return this.password.equals(password);
-    }
-
-    /**
-     * @return the {@code User}'s {@code HackathonParticipation}
-     */
-    public HackathonParticipation getParticipation() {
-        return participation;
-    }
-
-    /**
-     * @return the {@code User}'s {@code Team}
-     */
-    public Team getTeam() {
-        return team;
-    }
-
-    /**
-     * Sets a new {@code User}'s {@code HackathonParticipation}
-     *
-     * @param participation the new {@code HackathonParticipation}
-     */
-    public void setParticipation(HackathonParticipation participation) {
-        this.participation = participation;
-    }
-
-    /**
-     * Sets a new {@code User}'s {@code Team}
-     *
-     * @param team the new {@code Team}
-     */
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void resetParticipation() {

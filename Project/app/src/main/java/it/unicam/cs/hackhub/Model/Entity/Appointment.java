@@ -1,8 +1,11 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
+import lombok.NonNull;
+import lombok.Setter;
 
 public class Appointment {
 
+    @Setter
     private Long id;
 
     private User mentor;
@@ -37,7 +40,4 @@ public class Appointment {
         return description;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

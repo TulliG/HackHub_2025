@@ -1,7 +1,7 @@
 package it.unicam.cs.hackhub.Services;
 
 import it.unicam.cs.hackhub.Repositories.TeamRepository;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Service class for managing {@code Team}s

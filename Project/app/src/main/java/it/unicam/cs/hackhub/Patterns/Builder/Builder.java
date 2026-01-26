@@ -2,7 +2,7 @@ package it.unicam.cs.hackhub.Patterns.Builder;
 
 import java.time.LocalDateTime;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import it.unicam.cs.hackhub.Model.Entity.User;
 

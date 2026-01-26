@@ -17,3 +17,7 @@ Project/build/
 # IntelliJ / IDEA
 .idea/workspace.xml
 .idea/tasks.xml
+
+
+# H2 DB
+Project/data/

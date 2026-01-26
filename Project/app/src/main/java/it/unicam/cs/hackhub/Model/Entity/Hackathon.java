@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import it.unicam.cs.hackhub.Model.Enums.State;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 @SuppressWarnings({"FieldMayBeFinal", "unused"})
 /*
