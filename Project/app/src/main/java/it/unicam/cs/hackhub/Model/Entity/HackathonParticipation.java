@@ -6,12 +6,18 @@ import it.unicam.cs.hackhub.Model.Enums.Role;
 
 public class HackathonParticipation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
+    @Getter
     private User user;
 
+    @Getter
     private Role role;
 
+    @Getter
     private Hackathon hackathon;
 
     public HackathonParticipation() {}
@@ -28,35 +34,4 @@ public class HackathonParticipation {
         this.hackathon = hackathon;
     }
 
-    /**
-     * @return the {@code HackathonParticipation}'s id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @return the {@code HackathonParticipation}'s {@code User}
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * @return the {@code User}'s role inside the {@code Hackathon}
-     */
-    public Role getRole() {
-        return role;
-    }
-
-    /**
-     * @return the {@code Hackathon} where the owner participates
-     */
-    public Hackathon getHackathon() {
-        return hackathon;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

@@ -14,14 +14,21 @@ import lombok.NonNull;
   */
 public class Hackathon {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
+    @Getter
     private String name;
 
+    @Getter
     private String location;
 
+    @Getter
     private String rules;
 
+    @Getter
     private int prize;
 
     private LocalDateTime creationDate;
