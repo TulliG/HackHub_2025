@@ -7,6 +7,7 @@ import it.unicam.cs.hackhub.Model.Entity.Appointment;
 import it.unicam.cs.hackhub.Model.Entity.Hackathon;
 import it.unicam.cs.hackhub.Model.Entity.Submission;
 import it.unicam.cs.hackhub.Model.Entity.User;
+import it.unicam.cs.hackhub.Repositories.AppointmentRepository;
 import it.unicam.cs.hackhub.Repositories.HackathonRepository;
 import it.unicam.cs.hackhub.Repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,10 +26,12 @@ public class HackathonService {
 
     private final HackathonRepository hackathonRepository;
     private final UserRepository userRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public HackathonService(HackathonRepository hackathonRepository, UserRepository userRepository) {
+    public HackathonService(HackathonRepository hackathonRepository, UserRepository userRepository, AppointmentRepository appointmentRepository) {
         this.hackathonRepository = hackathonRepository;
         this.userRepository = userRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -44,7 +47,7 @@ public class HackathonService {
 
     @Transactional(readOnly = true)
     public Set<User> getUsers(@NonNull Long id) {
-        return get(id).getMentors();
+        return null; // TODO
     }
 
     @Transactional(readOnly = true)
@@ -54,10 +57,7 @@ public class HackathonService {
 
     @Transactional(readOnly = true)
     public Set<Appointment> getAppointments(@NonNull Long hackathonId, @NonNull Long userId) {
-        Hackathon hackathon = get(hackathonId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id " + userId));
-        return hackathon.getAppointments(user);
+        return null; // TODO
     }
 
     public Hackathon put(@NonNull Hackathon hackathon) {
