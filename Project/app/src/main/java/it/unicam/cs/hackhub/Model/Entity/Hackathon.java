@@ -16,11 +16,6 @@ import lombok.Setter;
   */
 public class Hackathon {
 
-<<<<<<< HEAD
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-=======
->>>>>>> test
     @Getter
     private Long id;
 
