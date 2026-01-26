@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Service;
+package it.unicam.cs.hackhub.Services;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,8 +7,8 @@ import it.unicam.cs.hackhub.Model.Entity.Appointment;
 import it.unicam.cs.hackhub.Model.Entity.Hackathon;
 import it.unicam.cs.hackhub.Model.Entity.Submission;
 import it.unicam.cs.hackhub.Model.Entity.User;
-import it.unicam.cs.hackhub.Repository.HackathonRepository;
-import it.unicam.cs.hackhub.Repository.UserRepository;
+import it.unicam.cs.hackhub.Repositories.HackathonRepository;
+import it.unicam.cs.hackhub.Repositories.UserRepository;
 
 // TODO aggiungere il CLOCK!!!
 

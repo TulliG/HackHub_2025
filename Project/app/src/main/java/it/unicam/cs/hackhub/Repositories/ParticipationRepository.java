@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Repository;
+package it.unicam.cs.hackhub.Repositories;
 
 import java.util.HashMap;
 import java.util.Map;

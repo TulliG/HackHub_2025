@@ -1,8 +1,8 @@
-package it.unicam.cs.hackhub.Service;
+package it.unicam.cs.hackhub.Services;
 
 import it.unicam.cs.hackhub.Model.Entity.Notification;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
-import it.unicam.cs.hackhub.Repository.NotificationRepository;
+import it.unicam.cs.hackhub.Repositories.NotificationRepository;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;

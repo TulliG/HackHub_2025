@@ -1,7 +1,7 @@
-package it.unicam.cs.hackhub.Service;
+package it.unicam.cs.hackhub.Services;
 
 import it.unicam.cs.hackhub.Model.Entity.User;
-import it.unicam.cs.hackhub.Repository.UserRepository;
+import it.unicam.cs.hackhub.Repositories.UserRepository;
 
 import java.util.List;
 

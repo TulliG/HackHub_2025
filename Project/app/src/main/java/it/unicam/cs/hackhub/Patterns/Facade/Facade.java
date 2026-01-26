@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.Patterns.Facade;
+package it.unicam.cs.hackhub.Patterns.Facade;
 
 public class Facade {
 

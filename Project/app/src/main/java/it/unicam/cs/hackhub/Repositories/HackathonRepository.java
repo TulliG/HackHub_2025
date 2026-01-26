@@ -1,21 +1,21 @@
-package it.unicam.cs.hackhub.Repository;
+package it.unicam.cs.hackhub.Repositories;
 
 import it.unicam.cs.hackhub.Model.Entity.Hackathon;
-import it.unicam.cs.hackhub.Model.Entity.Team;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TeamRepository {
+public class HackathonRepository {
 
-    private static final Map<Long, Team> repo = new HashMap<>();
+    private static final Map<Long, Hackathon> repo = new HashMap<>();
     private static Long serialId = 1L;
 
-    public Team get(Long id) {
+    public Hackathon get(Long id) {
         return repo.get(id);
     }
 
-    public Team put(Team u) {
+    public Hackathon put(Hackathon u) {
         if (u.getId() == null) u.setId(serialId++);
         repo.put(u.getId(), u);
         return u;
@@ -23,5 +23,9 @@ public class TeamRepository {
 
     public void remove(Long id) {
         repo.remove(id);
+    }
+
+    public Collection<Hackathon> getAll() {
+        return repo.values();
     }
 }

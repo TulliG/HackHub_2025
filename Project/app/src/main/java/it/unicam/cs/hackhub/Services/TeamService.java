@@ -1,6 +1,6 @@
-package it.unicam.cs.hackhub.Service;
+package it.unicam.cs.hackhub.Services;
 
-import it.unicam.cs.hackhub.Repository.TeamRepository;
+import it.unicam.cs.hackhub.Repositories.TeamRepository;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
