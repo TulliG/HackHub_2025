@@ -2,6 +2,7 @@ package it.unicam.cs.hackhub.Model.Entity;
 
 
 import lombok.NonNull;
+import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,10 +13,13 @@ import java.util.Set;
  * */
 public class Team {
 
+    @Getter
     private Long id = null;
 
+    @Getter
     private String name;
 
+    @Getter
     private final Set<User> members = new HashSet<>();
 
     public Team() {}
@@ -30,27 +34,6 @@ public class Team {
         if (name.trim().isEmpty())
             throw new IllegalArgumentException("Invalid name");
         this.name = name;
-    }
-
-    /**
-     * @return the {@code Team}'s id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @return the {@code Team}'s name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return the {@code Team}'s {@code HashSet} of members
-     */
-    public Set<User> getMembers() {
-        return members;
     }
 
     /**

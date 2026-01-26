@@ -1,6 +1,7 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 import lombok.NonNull;
+import lombok.Getter;
 
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 
@@ -9,16 +10,22 @@ import it.unicam.cs.hackhub.Model.Enums.NotificationType;
  */
 public class Notification {
     
+    @Getter
     private Long id;
 
+    @Getter
     private User sender;
 
+    @Getter
     private User receiver;
 
+    @Getter
     private String message;
 
+    @Getter
     private NotificationType type;
 
+    @Getter
     private Long targetId;
 
     public Notification() {}
@@ -53,45 +60,6 @@ public class Notification {
         this.receiver = receiver;
         this.message = message.trim();
         this.type = NotificationType.INFO;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @return the sender
-     */
-    public User getSender() {
-        return sender;
-    }
-
-    /**
-     * @return the receiver
-     */
-    public User getReceiver() {
-        return receiver;
-    }
-
-    /**
-     * @return the body of the message
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * @return the type of the {@code Notification}
-     */
-    public NotificationType getType() {
-        return type;
-    }
-
-    /**
-     * @return the targeted element's id
-     */
-    public Long getTargetId() {
-        return targetId;
     }
 
     public void setId(Long id) {
