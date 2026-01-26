@@ -3,43 +3,32 @@ package it.unicam.cs.hackhub.Model.Entity;
 
 
 import lombok.NonNull;
+import lombok.Getter;
 
 import java.io.File;
 
 public class Submission {
 
+    @Getter
     private Long id = null;
 
+    @Getter
     private String content;
 
+    @Getter
     private Integer grade = null;
 
+    @Getter
     private Team submissioner;
 
-    public Submission(@NonNull String content,@NonNull Team team) {
+    public Submission(@NonNull String content, @NonNull Team team) {
         //TODO Controllo file sottomissione
         this.content = content;
         this.submissioner = team;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public Integer getGrade() {
-        return grade;
-    }
-
     public void setGrade(Integer grade) {
         this.grade = Math.clamp(grade, 1, 10);
-    }
-
-    public Team getSubmissioner() {
-        return submissioner;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     /**
