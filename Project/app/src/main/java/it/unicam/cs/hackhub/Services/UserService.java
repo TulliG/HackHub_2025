@@ -7,9 +7,13 @@ import java.util.List;
 
 public class UserService {
 
-    UserRepository repo = new UserRepository();
+    private final  UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> getAvailableUsers() {
-        return repo.getAll().stream().filter(u -> u.getParticipation() == null).toList();
+        return userRepository.findAll().stream().filter(u -> u.getParticipation() == null).toList();
     }
 }

@@ -9,43 +9,65 @@ import it.unicam.cs.hackhub.Model.Entity.Submission;
 import it.unicam.cs.hackhub.Model.Entity.User;
 import it.unicam.cs.hackhub.Repositories.HackathonRepository;
 import it.unicam.cs.hackhub.Repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.NonNull;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 // TODO aggiungere il CLOCK!!!
 
 /**
  * Service class for managing {@code Hackathon}s and {@code Submission}s
  */
+@Service
+@Transactional
 public class HackathonService {
 
-    HackathonRepository hackathonRepository = new HackathonRepository();
-    UserRepository userRepository = new UserRepository();
+    private final HackathonRepository hackathonRepository;
+    private final UserRepository userRepository;
 
-    public Hackathon get(Long id) {
-        return hackathonRepository.get(id);
+    public HackathonService(HackathonRepository hackathonRepository, UserRepository userRepository) {
+        this.hackathonRepository = hackathonRepository;
+        this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
+    public Hackathon get(@NonNull Long id) {
+        return hackathonRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Hackathon not found with id " + id));
+    }
+
+    @Transactional(readOnly = true)
     public Set<Hackathon> getAll() {
-        return new HashSet<>(hackathonRepository.getAll());
+        return new HashSet<>(hackathonRepository.findAll());
     }
 
-    public Set<User> getUsers(Long id) {
-        return hackathonRepository.get(id).getMentors();
+    @Transactional(readOnly = true)
+    public Set<User> getUsers(@NonNull Long id) {
+        return get(id).getMentors();
     }
 
-    public Set<Submission> getSubmissions(Long id) {
-        return hackathonRepository.get(id).getSubmissions();
+    @Transactional(readOnly = true)
+    public Set<Submission> getSubmissions(@NonNull Long id) {
+        return get(id).getSubmissions();
     }
 
-    public Set<Appointment> getAppointments(Long hackathonId, Long userId) {
-        return hackathonRepository.get(hackathonId).getAppointments(userRepository.get(userId));
+    @Transactional(readOnly = true)
+    public Set<Appointment> getAppointments(@NonNull Long hackathonId, @NonNull Long userId) {
+        Hackathon hackathon = get(hackathonId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id " + userId));
+        return hackathon.getAppointments(user);
     }
 
-    public void put(Hackathon hackathon) {
-        hackathonRepository.put(hackathon);
+    public Hackathon put(@NonNull Hackathon hackathon) {
+        return hackathonRepository.save(hackathon);
     }
 
-    public void remove(Long id) {
-        hackathonRepository.remove(id);
+    public void remove(@NonNull Long id) {
+        if (!hackathonRepository.existsById(id)) {
+            throw new EntityNotFoundException("Hackathon not found with id " + id);
+        }
+        hackathonRepository.deleteById(id);
     }
-
 }
