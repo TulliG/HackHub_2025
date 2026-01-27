@@ -15,9 +15,8 @@ Project/build/
 .DS_Store
 
 # IntelliJ / IDEA
-.idea/workspace.xml
-.idea/tasks.xml
-
+.idea/
+.vscode/
 
 # H2 DB
 Project/data/
