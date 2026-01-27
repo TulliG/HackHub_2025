@@ -3,8 +3,11 @@ package it.unicam.cs.hackhub.Model.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+import lombok.NonNull;
 
+@Entity
+@Table(name = "appointments")
 public class Appointment {
 
     @Id
@@ -13,18 +16,33 @@ public class Appointment {
     private Long id;
 
     @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    private Hackathon hackathon;
+
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "mentor_id", nullable = false)
     private User mentor;
 
     @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
     @Getter
+    @Column(nullable = false)
     private String description;
 
-    public Appointment(User mentor, Team team, String description) {
+    protected Appointment() {} // richiesto da JPA
+
+    public Appointment(@NonNull Hackathon hackathon,
+                       @NonNull User mentor,
+                       @NonNull Team team,
+                       @NonNull String description) {
+        this.hackathon = hackathon;
         this.mentor = mentor;
         this.team = team;
         this.description = description;
     }
-
 }

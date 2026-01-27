@@ -1,11 +1,10 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.NonNull;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +13,8 @@ import java.util.Set;
  * Class that defines the {@code Team} that is defined in the {@code Hackhub}
  * and that participate in a {@code Hackathon}.
  * */
+@Entity
+@Table(name = "teams")
 public class Team {
 
     @Id
@@ -22,10 +23,18 @@ public class Team {
     private Long id = null;
 
     @Getter
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Getter
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private final Set<User> members = new HashSet<>();
+
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hackathon_id")
+    private Hackathon hackathon = null;
 
     public Team() {}
 
@@ -50,6 +59,7 @@ public class Team {
         if (user.getTeam() != null)
             throw new IllegalArgumentException("the user is already part of a team");
         members.add(user);
+        user.setTeam(this);
     }
 
     /**
@@ -59,6 +69,6 @@ public class Team {
      */
     public void removeMember(@NonNull User user) {
         members.remove(user);
+        user.setTeam(null);
     }
-
 }

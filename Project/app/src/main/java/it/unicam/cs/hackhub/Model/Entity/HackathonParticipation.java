@@ -1,13 +1,19 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.NonNull;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
 
 import it.unicam.cs.hackhub.Model.Enums.Role;
+import lombok.Setter;
 
+@Entity
+@Table(
+        name = "participations",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "user_id")
+        }
+)
 public class HackathonParticipation {
 
     @Id
@@ -16,12 +22,20 @@ public class HackathonParticipation {
     private Long id;
 
     @Getter
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @Getter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "hackathon_id", nullable = false)
     private Hackathon hackathon;
 
     public HackathonParticipation() {}
