@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.NonNull;
 
 @Entity
-@Table(name = "appointments")
+@Table(name = "calendar")
 public class Appointment {
 
     @Id

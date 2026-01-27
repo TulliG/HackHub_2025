@@ -55,18 +55,12 @@ public class Hackathon {
     private State state;
 
     @Getter
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "winner_team_id")
-    private Team winner = null;
-
-    @Getter
     @OneToMany(mappedBy = "hackathon", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private Set<Submission> submissions = new HashSet<>();
 
     @Getter
     @OneToMany(mappedBy = "hackathon", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private Set<Appointment> appointments = new HashSet<>();
+    private Set<Appointment> calendar = new HashSet<>();
 
     public Hackathon() {}
 
