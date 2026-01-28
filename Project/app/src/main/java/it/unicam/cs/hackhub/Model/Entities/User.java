@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.Entity;
+package it.unicam.cs.hackhub.Model.Entities;
 
 
 import jakarta.persistence.*;
@@ -22,6 +22,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Getter
     @Column(nullable = false)
     private String password;
 

@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.Entity;
+package it.unicam.cs.hackhub.Model.Entities;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import lombok.NonNull;
 
-import it.unicam.cs.hackhub.Model.Entity.User;
+import it.unicam.cs.hackhub.Model.Entities.User;
 
 /**
  * Interface that defines the behaviour of an {@code HackathonBuilder}.
