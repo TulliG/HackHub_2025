@@ -17,6 +17,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public void register(@RequestBody RegisterRequest req) {
-        //userService.create(req.username(), req.password());
+        userService.create(req.username(), req.password());
     }
 }

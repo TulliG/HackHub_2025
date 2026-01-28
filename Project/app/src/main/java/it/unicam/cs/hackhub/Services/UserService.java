@@ -21,6 +21,10 @@ public class UserService {
     }
 
     public Optional<User> getByUsername(String username) {
-        return  userRepository.findByUsername(username);
+        return userRepository.findByUsername(username);
+    }
+
+    public void create(String username, String password) {
+        userRepository.save(new User(username, password));
     }
 }
