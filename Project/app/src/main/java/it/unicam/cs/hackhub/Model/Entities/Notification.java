@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Model.Entity;
+package it.unicam.cs.hackhub.Model.Entities;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

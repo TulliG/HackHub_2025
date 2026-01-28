@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import lombok.NonNull;
 
-import it.unicam.cs.hackhub.Model.Entity.Hackathon;
-import it.unicam.cs.hackhub.Model.Entity.User;
+import it.unicam.cs.hackhub.Model.Entities.Hackathon;
+import it.unicam.cs.hackhub.Model.Entities.User;
 
 public class HackathonBuilder implements Builder {
 

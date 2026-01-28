@@ -3,10 +3,10 @@ package it.unicam.cs.hackhub.Services;
 import java.util.HashSet;
 import java.util.Set;
 
-import it.unicam.cs.hackhub.Model.Entity.Appointment;
-import it.unicam.cs.hackhub.Model.Entity.Hackathon;
-import it.unicam.cs.hackhub.Model.Entity.Submission;
-import it.unicam.cs.hackhub.Model.Entity.User;
+import it.unicam.cs.hackhub.Model.Entities.Appointment;
+import it.unicam.cs.hackhub.Model.Entities.Hackathon;
+import it.unicam.cs.hackhub.Model.Entities.Submission;
+import it.unicam.cs.hackhub.Model.Entities.User;
 import it.unicam.cs.hackhub.Repositories.AppointmentRepository;
 import it.unicam.cs.hackhub.Repositories.HackathonRepository;
 import it.unicam.cs.hackhub.Repositories.UserRepository;

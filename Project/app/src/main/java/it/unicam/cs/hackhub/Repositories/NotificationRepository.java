@@ -1,6 +1,6 @@
 package it.unicam.cs.hackhub.Repositories;
 
-import it.unicam.cs.hackhub.Model.Entity.Notification;
+import it.unicam.cs.hackhub.Model.Entities.Notification;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
