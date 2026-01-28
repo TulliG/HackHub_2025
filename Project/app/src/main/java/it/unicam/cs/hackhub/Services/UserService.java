@@ -25,6 +25,11 @@ public class UserService {
     }
 
     public void create(String username, String password) {
+        //TODO: check dello username
         userRepository.save(new User(username, password));
+    }
+
+    public Optional<User> getById(Long id) {
+        return userRepository.findById(id);
     }
 }
