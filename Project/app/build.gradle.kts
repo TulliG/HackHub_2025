@@ -22,6 +22,8 @@ dependencies {
 
     runtimeOnly("com.h2database:h2")
 
+    developmentOnly("org.springframework.boot:spring-boot-h2console")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     compileOnly("org.projectlombok:lombok")
