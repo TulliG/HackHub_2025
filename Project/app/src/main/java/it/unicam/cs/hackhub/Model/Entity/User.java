@@ -1,35 +1,43 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 /**
  * Class that defines a {@code User} that is logged in the {@code HackHub}.
  * */
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @Getter
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
     @Setter
     @Getter
+    @OneToOne(mappedBy = "user",
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private HackathonParticipation participation = null;
 
     @Setter
     @Getter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
     private Team team = null;
+
+
 
     public User() {}
 
@@ -55,9 +63,4 @@ public class User {
     public boolean isPasswordMatch(String password) {
         return this.password.equals(password);
     }
-
-    public void resetParticipation() {
-        this.participation = null;
-    }
-
 }

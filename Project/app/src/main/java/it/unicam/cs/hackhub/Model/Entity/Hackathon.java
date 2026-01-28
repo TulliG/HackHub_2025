@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import it.unicam.cs.hackhub.Model.Enums.State;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.NonNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 @SuppressWarnings({"FieldMayBeFinal", "unused"})
 /*
   Class that defines an {@code Hackathon} inside the {@code Hackhub}
   */
+@Entity
+@Table(name = "hackathons")
 public class Hackathon {
 
     @Id
@@ -23,6 +23,7 @@ public class Hackathon {
     private Long id;
 
     @Getter
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Getter
@@ -34,43 +35,34 @@ public class Hackathon {
     @Getter
     private int prize;
 
-    @Getter
-    private LocalDateTime creationDate;
+    @Getter @Column(nullable = false) private LocalDateTime creationDate;
+    @Getter @Column(nullable = false) private LocalDateTime startDate;
+    @Getter @Column(nullable = false) private LocalDateTime evaluationDate;
+    @Getter @Column(nullable = false) private LocalDateTime endingDate;
 
     @Getter
-    private LocalDateTime startDate;
+    @OneToMany(mappedBy = "hackathon", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<HackathonParticipation> participations = new HashSet<>();
 
     @Getter
-    private LocalDateTime evaluationDate;
-
-    @Getter
-    private LocalDateTime endingDate;
-
-    @Getter
-    private User organizer;
-
-    @Getter
-    private User judge = null;
-
-    @Getter
-    private Set<User> mentors = new HashSet<>();
-
-    @Getter
+    @OneToMany(mappedBy = "hackathon", fetch = FetchType.LAZY)
     private Set<Team> teams = new HashSet<>();
 
     @Getter
     @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private State state;
 
     @Getter
-    @Setter
-    private Team winner = null;
-
-    @Getter
+    @OneToMany(mappedBy = "hackathon", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private Set<Submission> submissions = new HashSet<>();
 
     @Getter
-    private Set<Appointment> appointments = new HashSet<>();
+    @OneToMany(mappedBy = "hackathon", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private Set<Appointment> calendar = new HashSet<>();
+
+    public Hackathon() {}
 
     /**
      * Builds an {@code Hackathon}
@@ -82,12 +74,11 @@ public class Hackathon {
      * @param startDate the start date
      * @param evaluationDate the evaluation date
      * @param endingDate the ending date
-     * @param organizer the organizer
      */
     public Hackathon(
             String name, String location, String rules, int prize,
-            LocalDateTime creationDate, LocalDateTime startDate, LocalDateTime evaluationDate,
-            LocalDateTime endingDate, User organizer
+            LocalDateTime creationDate, LocalDateTime startDate,
+            LocalDateTime evaluationDate, LocalDateTime endingDate
     ) {
         this.name = name;
         this.location = location;
@@ -96,37 +87,19 @@ public class Hackathon {
         this.startDate = startDate;
         this.evaluationDate = evaluationDate;
         this.endingDate = endingDate;
-        this.organizer = organizer;
-    }
-
-    /**
-     * Adds the id
-     * @param id the id
-     */
-    public void setId(@NonNull Long id) {
-        this.id = id;
-    }
-
-    public void setJudge(@NonNull User judge) {
-	if (this.judge != null)
-            this.judge = judge;
-    }
-
-    public void addMentor(@NonNull User mentor) {
-
-        this.mentors.add(mentor);
     }
 
     public void addTeam(@NonNull Team team) {
         teams.add(team);
-    }
-
-    public void addSubmission(@NonNull Submission submission) {
-
-        submissions.add(submission);
+        team.setHackathon(this);
     }
 
     public void removeTeam(@NonNull Team team) {
         teams.remove(team);
+        team.setHackathon(null);
+    }
+
+    public void addSubmission(@NonNull Submission submission) {
+        submissions.add(submission);
     }
 }

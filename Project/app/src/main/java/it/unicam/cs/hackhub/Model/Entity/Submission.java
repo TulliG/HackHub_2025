@@ -1,29 +1,40 @@
 package it.unicam.cs.hackhub.Model.Entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.NonNull;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="submissions")
 public class Submission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    private Long id = null;
+    private Long id;
 
     @Getter
+    @Column(nullable = false)
     private String content;
 
     @Getter
+    @Column
     private Integer grade = null;
 
     @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "team_id", nullable = false)
     private Team submissioner;
 
-    public Submission(@NonNull String content, @NonNull Team team) {
-        //TODO Controllo file sottomissione
+    @Getter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "hackathon_id", nullable = false)
+    private Hackathon hackathon;
+
+    protected Submission() {}
+
+    public Submission(@NonNull Hackathon hackathon, @NonNull String content, @NonNull Team team) {
+        this.hackathon = hackathon;
         this.content = content;
         this.submissioner = team;
     }
@@ -31,5 +42,4 @@ public class Submission {
     public void setGrade(Integer grade) {
         this.grade = Math.clamp(grade, 1, 10);
     }
-
 }
