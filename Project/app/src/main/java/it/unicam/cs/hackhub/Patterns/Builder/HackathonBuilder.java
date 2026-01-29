@@ -1,12 +1,12 @@
 package it.unicam.cs.hackhub.Patterns.Builder;
 
 import java.time.LocalDateTime;
-
 import lombok.NonNull;
-
 import it.unicam.cs.hackhub.Model.Entities.Hackathon;
-import it.unicam.cs.hackhub.Model.Entities.User;
 
+/**
+ * Class that builds a {@code Hackathon}
+ * */
 public class HackathonBuilder implements Builder {
 
     private String name;
@@ -24,16 +24,6 @@ public class HackathonBuilder implements Builder {
     private LocalDateTime evaluationDate;
 
     private LocalDateTime endingDate;
-
-    private int minTeams;
-
-    private int maxTeams;
-
-    private int minTeamMembers;
-
-    private int maxTeamMembers;
-
-    private User organizer;
 
     @Override
     public void setName(@NonNull String name) {
@@ -70,34 +60,13 @@ public class HackathonBuilder implements Builder {
        this.endingDate = date;
     }
 
-    @Override
-    public void setMinTeams(int teams) {
-        this.minTeams = teams;
-    }
-
-    @Override
-    public void setMaxTeams(int teams) {
-        this.maxTeams = teams;
-    }
-
-    @Override
-    public void setMinTeamMembers(int m) {
-        this.minTeamMembers = m;
-    }
-
-    @Override
-    public void setMaxTeamMembers(int m) {
-        this.maxTeamMembers = m;
-    }
-
-    @Override
-    public void setOrganizer(@NonNull User organizer) {
-        this.organizer = organizer;
-    }
-
-    // TODO: completare il getResult
+    /**
+     * Methods that returns the {@code Hackathon} to be built
+     * @return the {@code Hackathon}
+     * */
     public Hackathon getResult() {
-        return null;
+        return new Hackathon(name, location, rules, prize,
+                creationDate, startDate, evaluationDate, endingDate);
     }
 
 }
