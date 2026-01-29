@@ -55,36 +55,4 @@ public interface Builder {
      */
     void setEndingDate(@NonNull LocalDateTime date);
 
-    /**
-     * Set the {@code Hackathon}'s minimum number of {@code Team}s to start
-     * the {@code Hackathon}.
-     * @param teams the number of teams
-     */
-    void setMinTeams(int teams);
-
-    /**
-     * Set the {@code Hackathon}'s maximum number of {@code Team}s to start
-     * the {@code Hackathon}.
-     * @param teams the number of teams
-     */
-    void setMaxTeams(int teams);
-
-    /**
-     * Set the {@code Hackathon}'s minimum number of member per {@code Team}.
-     * @param m the number of members per {@code Team}
-     */
-    void setMinTeamMembers(int m);
-
-    /**
-     * Set the {@code Hackathon}'s maximum number of member per {@code Team}.
-     * @param m the number of members per {@code Team}
-     */
-    void setMaxTeamMembers(int m);
-
-    /**
-     * Set the {@code Hackathon}'s organizer.
-     * @param organizer the organizer
-     */
-    void setOrganizer(User organizer);
-
 }
