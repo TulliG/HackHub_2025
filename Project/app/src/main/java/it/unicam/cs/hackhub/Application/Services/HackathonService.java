@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Services;
+package it.unicam.cs.hackhub.Application.Services;
 
 import java.util.HashSet;
 import java.util.Set;

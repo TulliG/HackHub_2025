@@ -1,7 +1,7 @@
 package it.unicam.cs.hackhub.Controllers;
 
 import it.unicam.cs.hackhub.Model.Entities.User;
-import it.unicam.cs.hackhub.Services.UserService;
+import it.unicam.cs.hackhub.Application.Services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

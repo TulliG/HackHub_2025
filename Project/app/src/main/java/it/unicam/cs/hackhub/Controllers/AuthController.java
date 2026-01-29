@@ -1,7 +1,7 @@
 package it.unicam.cs.hackhub.Controllers;
 
 import it.unicam.cs.hackhub.Controllers.Requests.RegisterRequest;
-import it.unicam.cs.hackhub.Services.UserService;
+import it.unicam.cs.hackhub.Application.Services.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

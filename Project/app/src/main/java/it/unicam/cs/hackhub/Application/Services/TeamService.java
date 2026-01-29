@@ -1,4 +1,4 @@
-package it.unicam.cs.hackhub.Services;
+package it.unicam.cs.hackhub.Application.Services;
 
 import it.unicam.cs.hackhub.Repositories.TeamRepository;
 import lombok.NonNull;

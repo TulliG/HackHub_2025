@@ -1,7 +1,5 @@
-package it.unicam.cs.hackhub.Services;
+package it.unicam.cs.hackhub.Application.Services;
 
-import it.unicam.cs.hackhub.Model.Entities.User;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
