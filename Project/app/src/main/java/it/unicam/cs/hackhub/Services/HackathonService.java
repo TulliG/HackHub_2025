@@ -52,7 +52,8 @@ public class HackathonService {
 
     @Transactional(readOnly = true)
     public Set<Submission> getSubmissions(@NonNull Long id) {
-        return get(id).getSubmissions();
+        return null;
+        //return get(id).getSubmissions();
     }
 
     @Transactional(readOnly = true)
