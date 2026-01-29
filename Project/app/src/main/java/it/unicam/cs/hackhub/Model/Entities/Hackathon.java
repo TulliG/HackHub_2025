@@ -103,4 +103,14 @@ public class Hackathon {
     public void addSubmission(@NonNull Submission submission) {
         submissions.add(submission);
     }
+
+    public State computeState(LocalDateTime now) {
+        if (now.isBefore(startDate))
+            return State.REGISTRATION;
+        if (now.isBefore(evaluationDate))
+            return State.RUNNING;
+        if (now.isBefore(endingDate))
+            return State.EVALUATION;
+        return State.CONCLUDED;
+    }
 }
