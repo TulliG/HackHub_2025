@@ -35,7 +35,11 @@ public interface Builder {
      */
     void setRules(@NonNull String rules);
 
-    //public void setCreationDate(@NonNull LocalDateTime date);
+    /**
+     * Set the {@code Hackathon}'s creation date.
+     * @param date the date
+     */
+    void setCreationDate(@NonNull LocalDateTime date);
 
     /**
      * Set the {@code Hackathon}'s start of the {@code RunningState}.

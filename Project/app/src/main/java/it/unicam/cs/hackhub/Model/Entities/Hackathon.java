@@ -87,6 +87,7 @@ public class Hackathon {
         this.startDate = startDate;
         this.evaluationDate = evaluationDate;
         this.endingDate = endingDate;
+        this.state = State.REGISTRATION;
     }
 
     public void addTeam(@NonNull Team team) {

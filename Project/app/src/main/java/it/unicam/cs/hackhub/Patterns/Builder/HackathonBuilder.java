@@ -46,6 +46,11 @@ public class HackathonBuilder implements Builder {
     }
 
     @Override
+    public void setCreationDate(@NonNull LocalDateTime date) {
+        this.creationDate = date;
+    }
+
+    @Override
     public void setStartDate(@NonNull LocalDateTime date) {
         this.startDate = date;
     }

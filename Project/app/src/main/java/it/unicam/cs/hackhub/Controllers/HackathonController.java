@@ -1,12 +1,32 @@
 package it.unicam.cs.hackhub.Controllers;
 
+import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
+import it.unicam.cs.hackhub.Application.Services.HackathonService;
+import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
+import it.unicam.cs.hackhub.Patterns.Facade.Facade;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/hackathon")
 public class HackathonController {
 
-    public void createHackathon() {
-        //TODO implement: create new Hackathon from builder
+    private final HackathonService service;
+    private final Facade facade;
+
+    public HackathonController(HackathonService service, Facade facade) {
+        this.service = service;
+        this.facade = facade;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public HackathonDTO createHackathon(CreateHackathonRequest request) {
+        facade.createHackathon();
+        return null;
     }
 
     public void getHackathonsInSubscription() {

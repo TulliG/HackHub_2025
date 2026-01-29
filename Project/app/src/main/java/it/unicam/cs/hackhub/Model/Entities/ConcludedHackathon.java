@@ -18,9 +18,6 @@ public class ConcludedHackathon {
     private String name;
 
     @Getter
-    private String location;
-
-    @Getter
     @Column(nullable = false)
     private LocalDateTime startDate;
 
@@ -36,7 +33,6 @@ public class ConcludedHackathon {
 
     public ConcludedHackathon(Hackathon hackathon, Team winnerTeam) {
         this.name = hackathon.getName();
-        this.location = hackathon.getLocation();
         this.startDate = hackathon.getStartDate();
         this.endingDate = hackathon.getEndingDate();
         this.winnerTeamName = winnerTeam.getName();
