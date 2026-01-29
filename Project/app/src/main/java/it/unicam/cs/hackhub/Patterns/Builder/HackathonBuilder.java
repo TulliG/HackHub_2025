@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import lombok.NonNull;
 import it.unicam.cs.hackhub.Model.Entities.Hackathon;
 
+/**
+ * Class that builds a {@code Hackathon}
+ * */
 public class HackathonBuilder implements Builder {
 
     private String name;
@@ -57,8 +60,13 @@ public class HackathonBuilder implements Builder {
        this.endingDate = date;
     }
 
+    /**
+     * Methods that returns the {@code Hackathon} to be built
+     * @return the {@code Hackathon}
+     * */
     public Hackathon getResult() {
-        return new Hackathon(name, location, rules, prize, creationDate, startDate, evaluationDate, endingDate);
+        return new Hackathon(name, location, rules, prize,
+                creationDate, startDate, evaluationDate, endingDate);
     }
 
 }
