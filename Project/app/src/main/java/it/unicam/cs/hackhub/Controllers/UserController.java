@@ -27,4 +27,8 @@ public class UserController {
                         "User with id " + id + " not found"
                 ));
     }
+
+    public void getAvailableUsers() {
+        //TODO implement: return all available Users
+    }
 }
