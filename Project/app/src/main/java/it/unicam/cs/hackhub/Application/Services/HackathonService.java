@@ -1,13 +1,18 @@
 package it.unicam.cs.hackhub.Application.Services;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
+import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
+import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Model.Entities.Appointment;
 import it.unicam.cs.hackhub.Model.Entities.Hackathon;
 import it.unicam.cs.hackhub.Model.Entities.Submission;
 import it.unicam.cs.hackhub.Model.Entities.User;
 import it.unicam.cs.hackhub.Repositories.AppointmentRepository;
+import it.unicam.cs.hackhub.Repositories.ConcludedHackathonRepository;
 import it.unicam.cs.hackhub.Repositories.HackathonRepository;
 import it.unicam.cs.hackhub.Repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,13 +30,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class HackathonService {
 
     private final HackathonRepository hackathonRepository;
+    private final ConcludedHackathonRepository concludedHackathonRepository;
     private final UserRepository userRepository;
     private final AppointmentRepository appointmentRepository;
+    private final HackathonMapper mapper;
 
-    public HackathonService(HackathonRepository hackathonRepository, UserRepository userRepository, AppointmentRepository appointmentRepository) {
+    public HackathonService(HackathonRepository hackathonRepository,
+                            UserRepository userRepository,
+                            AppointmentRepository appointmentRepository,
+                            HackathonMapper mapper,
+                            ConcludedHackathonRepository concludedHackathonRepository) {
         this.hackathonRepository = hackathonRepository;
         this.userRepository = userRepository;
         this.appointmentRepository = appointmentRepository;
+        this.mapper = mapper;
+        this.concludedHackathonRepository = concludedHackathonRepository;
     }
 
     @Transactional(readOnly = true)
@@ -41,8 +54,21 @@ public class HackathonService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Hackathon> getAll() {
-        return new HashSet<>(hackathonRepository.findAll());
+    public List<HackathonDTO> getAll() {
+        return hackathonRepository
+                        .findAll()
+                        .stream()
+                        .map(mapper::toDTO)
+                        .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ConcludedHackathonDTO> getAllConcluded() {
+        return concludedHackathonRepository
+                .findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
     @Transactional(readOnly = true)

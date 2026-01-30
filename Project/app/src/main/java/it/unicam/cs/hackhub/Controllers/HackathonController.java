@@ -1,14 +1,19 @@
 package it.unicam.cs.hackhub.Controllers;
 
+import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/hackathon")
@@ -33,8 +38,19 @@ public class HackathonController {
         //TODO implement: return all Hackathon with Hackthon.getState() == State.SUBSCRIPTION
     }
 
-    public void getAll() {
-        //TODO implement: return all Hackathon + ConcludedHackathons
+    @GetMapping("/consultation")
+    public List<HackathonDTO> getAllHackathonDTO() {
+        return service.getAll();
+    }
+
+    @GetMapping("/concluded")
+    public List<ConcludedHackathonDTO> getAllConcludedDTO() {
+        return service.getAllConcluded();
+    }
+
+    @GetMapping
+    public List<HackathonDTO> getConcluded() {
+        return null;
     }
 
     public void registerTeam() {
