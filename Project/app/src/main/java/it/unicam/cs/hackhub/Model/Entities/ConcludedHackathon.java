@@ -31,10 +31,11 @@ public class ConcludedHackathon {
 
     protected ConcludedHackathon() {}
 
-    public ConcludedHackathon(Hackathon hackathon, Team winnerTeam) {
+    public ConcludedHackathon(Hackathon hackathon, String str) {
         this.name = hackathon.getName();
         this.startDate = hackathon.getStartDate();
         this.endingDate = hackathon.getEndingDate();
-        this.winnerTeamName = winnerTeam.getName();
+        this.winnerTeamName = str;
     }
+
 }

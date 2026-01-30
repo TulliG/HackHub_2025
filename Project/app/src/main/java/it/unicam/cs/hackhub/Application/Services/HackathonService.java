@@ -7,10 +7,7 @@ import java.util.Set;
 import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
-import it.unicam.cs.hackhub.Model.Entities.Appointment;
-import it.unicam.cs.hackhub.Model.Entities.Hackathon;
-import it.unicam.cs.hackhub.Model.Entities.Submission;
-import it.unicam.cs.hackhub.Model.Entities.User;
+import it.unicam.cs.hackhub.Model.Entities.*;
 import it.unicam.cs.hackhub.Repositories.AppointmentRepository;
 import it.unicam.cs.hackhub.Repositories.ConcludedHackathonRepository;
 import it.unicam.cs.hackhub.Repositories.HackathonRepository;
@@ -96,5 +93,11 @@ public class HackathonService {
             throw new EntityNotFoundException("Hackathon not found with id " + id);
         }
         hackathonRepository.deleteById(id);
+    }
+
+    private void cancelledHackathon(Hackathon hackathon, String str) {
+        ConcludedHackathon h = new ConcludedHackathon(hackathon, str);
+        concludedHackathonRepository.save(h);
+        hackathonRepository.delete(hackathon);
     }
 }
