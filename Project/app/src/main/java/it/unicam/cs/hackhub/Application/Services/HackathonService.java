@@ -1,6 +1,7 @@
 package it.unicam.cs.hackhub.Application.Services;
 
-import java.util.ArrayList;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -8,16 +9,13 @@ import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Model.Entities.*;
-import it.unicam.cs.hackhub.Repositories.AppointmentRepository;
-import it.unicam.cs.hackhub.Repositories.ConcludedHackathonRepository;
-import it.unicam.cs.hackhub.Repositories.HackathonRepository;
-import it.unicam.cs.hackhub.Repositories.UserRepository;
+import it.unicam.cs.hackhub.Model.Enums.Role;
+import it.unicam.cs.hackhub.Model.Enums.State;
+import it.unicam.cs.hackhub.Repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-// TODO aggiungere il CLOCK!!!
 
 /**
  * Service class for managing {@code Hackathon}s and {@code Submission}s
@@ -31,17 +29,26 @@ public class HackathonService {
     private final UserRepository userRepository;
     private final AppointmentRepository appointmentRepository;
     private final HackathonMapper mapper;
+    private final Clock clock;
+    private final TeamRepository teamRepository;
+    private final ParticipationRepository participationRepository;
 
     public HackathonService(HackathonRepository hackathonRepository,
                             UserRepository userRepository,
                             AppointmentRepository appointmentRepository,
                             HackathonMapper mapper,
-                            ConcludedHackathonRepository concludedHackathonRepository) {
+                            ConcludedHackathonRepository concludedHackathonRepository,
+                            Clock clock,
+                            TeamRepository teamRepository,
+                            ParticipationRepository participationRepository) {
         this.hackathonRepository = hackathonRepository;
         this.userRepository = userRepository;
         this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
         this.concludedHackathonRepository = concludedHackathonRepository;
+        this.clock = clock;
+        this.teamRepository = teamRepository;
+        this.participationRepository = participationRepository;
     }
 
     @Transactional(readOnly = true)
@@ -100,4 +107,24 @@ public class HackathonService {
         concludedHackathonRepository.save(h);
         hackathonRepository.delete(hackathon);
     }
+
+    @Transactional
+    private void refreshStateIfNeeded(Hackathon h) {
+        LocalDateTime localDateTime = LocalDateTime.now(clock);
+        State state = h.computeState(localDateTime);
+        if (state == h.getState()) return;
+        if (state == State.RUNNING) {
+            Long teamCount = teamRepository.countByHackathonId(h.getId());
+            Long judgeCount
+                    = participationRepository.countByHackathonIdAndRole(h.getId(), Role.JUDGE);
+            Long mentorCount
+                    = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
+            if (judgeCount < 1 || mentorCount < 1 || teamCount < 2) {
+                cancelledHackathon(h, "cancelled");
+                return;
+            }
+        }
+        h.setState(state);
+    }
+
 }

@@ -1,13 +1,35 @@
 package it.unicam.cs.hackhub.Configs;
 
-import java.time.Clock;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-// TODO fare il clock
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+@Configuration
 public class TimeConfig {
 
-    private Clock clock = null;
-    public TimeConfig() {
+    @Bean
+    public Clock clock(
+            @Value("${app.time.mode:system}") String mode,
+            @Value("${app.time.fixed:}") String fixedTime
+    ) {
+        ZoneId zone = ZoneId.systemDefault();
 
+        if ("fixed".equalsIgnoreCase(mode)) {
+            if (fixedTime == null || fixedTime.isBlank()) {
+                throw new IllegalArgumentException(
+                        "app.time.mode=fixed requires app.time.fixed=yyyy-MM-ddTHH:mm:ss"
+                );
+            }
+            LocalDateTime ldt = LocalDateTime.parse(fixedTime); // es: 2026-01-30T14:00:00
+            Instant instant = ldt.atZone(zone).toInstant();
+            return Clock.fixed(instant, zone);
+        }
+
+        return Clock.system(zone);
     }
-
 }
