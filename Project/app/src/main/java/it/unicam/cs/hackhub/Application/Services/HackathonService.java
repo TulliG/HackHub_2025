@@ -3,19 +3,26 @@ package it.unicam.cs.hackhub.Application.Services;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
+import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Model.Entities.*;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
+import it.unicam.cs.hackhub.Patterns.Builder.Builder;
+import it.unicam.cs.hackhub.Patterns.Builder.HackathonBuilder;
 import it.unicam.cs.hackhub.Repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Service class for managing {@code Hackathon}s and {@code Submission}s
@@ -95,6 +102,53 @@ public class HackathonService {
         return hackathonRepository.save(hackathon);
     }
 
+    public HackathonDTO createHackathon(
+            CreateHackathonRequest req,
+            UserDetails details) {
+        User organizer = userRepository.findByUsername(details.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Authenticated user not found"
+                ));
+
+        if (organizer.getParticipation() != null || organizer.getTeam() != null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The user can't create an hackathon because is in a team or in an hackathon"
+            );
+        }
+
+        if (!req.startDate().isAfter(LocalDateTime.now(clock)) ||
+                !req.startDate().isBefore(req.evaluationDate()) ||
+                !req.evaluationDate().isBefore(req.endingDate())
+        ) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Dates are invalid"
+            );
+        }
+
+        Builder builder = new HackathonBuilder();
+        builder.setName(req.name());
+        builder.setLocation(req.location());
+        builder.setRules(req.rules());
+        builder.setPrize(req.prize());
+        builder.setCreationDate(LocalDateTime.now(clock));
+        builder.setStartDate(req.startDate());
+        builder.setEvaluationDate(req.evaluationDate());
+        builder.setEndingDate(req.endingDate());
+        Hackathon h = builder.getResult();
+
+        hackathonRepository.save(h);
+
+        HackathonParticipation participation = new HackathonParticipation(organizer, h, Role.ORGANIZER);
+        participationRepository.save(participation);
+
+        h.addParticipation(participation);
+        return mapper.toDTO(h);
+    }
+
+
     public void remove(@NonNull Long id) {
         if (!hackathonRepository.existsById(id)) {
             throw new EntityNotFoundException("Hackathon not found with id " + id);
@@ -109,7 +163,7 @@ public class HackathonService {
     }
 
     @Transactional
-    private void refreshStateIfNeeded(Hackathon h) {
+    protected void refreshStateIfNeeded(Hackathon h) {
         LocalDateTime localDateTime = LocalDateTime.now(clock);
         State state = h.computeState(localDateTime);
         if (state == h.getState()) return;
@@ -126,5 +180,7 @@ public class HackathonService {
         }
         h.setState(state);
     }
+
+
 
 }

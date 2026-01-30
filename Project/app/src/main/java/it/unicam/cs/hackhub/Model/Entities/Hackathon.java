@@ -23,16 +23,19 @@ public class Hackathon {
     private Long id;
 
     @Getter
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Getter
+    @Column(nullable = false)
     private String location;
 
     @Getter
+    @Column(nullable = false)
     private String rules;
 
     @Getter
+    @Column(nullable = false)
     private int prize;
 
     @Getter @Column(nullable = false) private LocalDateTime creationDate;
@@ -102,6 +105,10 @@ public class Hackathon {
 
     public void addSubmission(@NonNull Submission submission) {
         submissions.add(submission);
+    }
+
+    public void addParticipation(@NonNull HackathonParticipation participation) {
+        participations.add(participation);
     }
 
     public State computeState(LocalDateTime now) {

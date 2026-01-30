@@ -5,12 +5,11 @@ import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,11 +26,12 @@ public class HackathonController {
         this.facade = facade;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public HackathonDTO createHackathon(CreateHackathonRequest request) {
-        facade.createHackathon();
-        return null;
+    public HackathonDTO createHackathon(
+            @RequestBody @Valid CreateHackathonRequest req,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return service.createHackathon(req, userDetails);
     }
 
     public void getHackathonsInSubscription() {
@@ -46,11 +46,6 @@ public class HackathonController {
     @GetMapping("/concluded")
     public List<ConcludedHackathonDTO> getAllConcludedDTO() {
         return service.getAllConcluded();
-    }
-
-    @GetMapping
-    public List<HackathonDTO> getConcluded() {
-        return null;
     }
 
     public void registerTeam() {

@@ -2,6 +2,7 @@ package it.unicam.cs.hackhub.Patterns.Builder;
 
 import java.time.LocalDateTime;
 
+import it.unicam.cs.hackhub.Model.Entities.Hackathon;
 import lombok.NonNull;
 
 import it.unicam.cs.hackhub.Model.Entities.User;
@@ -58,5 +59,11 @@ public interface Builder {
      * @param date the date
      */
     void setEndingDate(@NonNull LocalDateTime date);
+
+    /**
+     * Creates a hackathon with the setted prameters
+     * @return the hackathon created
+     */
+    Hackathon getResult();
 
 }
