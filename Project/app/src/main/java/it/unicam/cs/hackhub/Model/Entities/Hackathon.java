@@ -85,6 +85,7 @@ public class Hackathon {
     ) {
         this.name = name;
         this.location = location;
+        this.rules = rules;
         this.prize = prize;
         this.creationDate = creationDate;
         this.startDate = startDate;

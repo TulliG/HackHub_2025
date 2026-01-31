@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .successHandler((req, res, auth) -> res.setStatus(200))
-                        .failureHandler((req, res, ex2) -> res.setStatus(404))
+                        .failureHandler((req, res, ex2) -> res.setStatus(400))
                         .permitAll()
                 )
                 .logout(logout -> logout
