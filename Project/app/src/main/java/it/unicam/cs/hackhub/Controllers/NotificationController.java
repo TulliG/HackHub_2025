@@ -1,25 +1,60 @@
 package it.unicam.cs.hackhub.Controllers;
 
-import org.springframework.web.bind.annotation.RestController;
+import it.unicam.cs.hackhub.Application.DTOs.NotificationDTO;
+import it.unicam.cs.hackhub.Application.Services.NotificationService;
+import it.unicam.cs.hackhub.Model.Enums.NotificationType;
+import it.unicam.cs.hackhub.Patterns.Facade.Facade;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/api/notification")
 public class NotificationController {
 
-    public void send() {
+    public final NotificationService notificationService;
+    public final Facade  facade;
+
+    public NotificationController(NotificationService notificationService, Facade facade) {
+        this.notificationService = notificationService;
+        this.facade = facade;
+    }
+
+
+    @PostMapping("/send/team/{id}")
+    public NotificationDTO send(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails details
+            ) {
         //TODO implement: send notification to a User(possible overloading?)
         //TODO implement: send support request and report
+        return facade.sendTeamInvite(id, details);
     }
 
     public void bookAppointmeent() {
         //TODO implement: add new Appointment in Hackathon, send notification to involved Team
     }
 
-    public void accept() {
-        //TODO implement: call facade accept method with involved notification
+    @PostMapping("/accept/{id}")
+    public ResponseEntity<String> accept(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        facade.accept(id, details);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Notifica accettata correttamente");
     }
 
-    public void getAllInvites() {
-        //TODO implement: return all notication with notification.getType().isInvite
+    @GetMapping("/get/invites")
+    public List<NotificationDTO> getInvites(
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        return notificationService.getByReceiver(details, NotificationType.TEAM_INVITE);
     }
 
     public void getReports() {

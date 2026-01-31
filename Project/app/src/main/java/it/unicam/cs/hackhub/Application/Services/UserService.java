@@ -2,6 +2,7 @@ package it.unicam.cs.hackhub.Application.Services;
 
 import it.unicam.cs.hackhub.Model.Entities.User;
 import it.unicam.cs.hackhub.Repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,11 +20,16 @@ public class UserService {
     }
 
     public List<User> getAvailableUsers() {
-        return userRepository.findAll().stream().filter(u -> u.getParticipation() == null).toList();
+        return userRepository.findAll()
+                .stream()
+                .filter(u -> u.getParticipation() == null && u.getTeam() == null)
+                .toList();
     }
 
-    public Optional<User> getByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "User "+" non esiste"));
     }
 
     public void create(String username, String password) {
@@ -31,16 +37,14 @@ public class UserService {
         userRepository.save(new User(username, password));
     }
 
-    public Optional<User> getById(Long id) {
-        return userRepository.findById(id);
+    public User getById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Lo user con id "+id+"non esiste"));
     }
 
     public User checkIfIsAvailable(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow( () -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Lo user con username "+username+" non esiste ."
-                ));
+        User user = getByUsername(username);
 
         if (user.getTeam() != null || user.getParticipation() != null) {
             throw new ResponseStatusException(

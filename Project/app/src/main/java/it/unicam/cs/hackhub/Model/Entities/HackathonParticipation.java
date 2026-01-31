@@ -51,5 +51,4 @@ public class HackathonParticipation {
         this.role = role;
         this.hackathon = hackathon;
     }
-
 }

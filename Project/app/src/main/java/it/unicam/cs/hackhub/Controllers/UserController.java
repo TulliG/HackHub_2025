@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -25,15 +25,15 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
-        User u = userService.getById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "User with id " + id + " not found"
-                ));
+        User u = userService.getById(id);
         return userMapper.toDTO(u);
     }
 
+    @GetMapping("/available")
     public void getAvailableUsers() {
-        //TODO implement: return all available Users
+        userService.getAvailableUsers()
+                .forEach(userMapper::toDTO);
     }
+
+
 }
