@@ -25,7 +25,7 @@ public class TimeConfig {
                         "app.time.mode=fixed requires app.time.fixed=yyyy-MM-ddTHH:mm:ss"
                 );
             }
-            LocalDateTime ldt = LocalDateTime.parse(fixedTime); // es: 2026-01-30T14:00:00
+            LocalDateTime ldt = LocalDateTime.parse(fixedTime);
             Instant instant = ldt.atZone(zone).toInstant();
             return Clock.fixed(instant, zone);
         }

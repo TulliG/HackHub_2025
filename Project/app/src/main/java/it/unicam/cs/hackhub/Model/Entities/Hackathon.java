@@ -115,6 +115,13 @@ public class Hackathon {
         user.setParticipation(participation);
     }
 
+    public void removeParticipation(@NonNull HackathonParticipation participation, User user) {
+        participations.remove(participation);
+        user.setParticipation(null);
+        participation.setUser(null);
+        participation.setHackathon(null);
+    }
+
     public State computeState(LocalDateTime now) {
         if (now.isBefore(startDate))
             return State.REGISTRATION;

@@ -71,12 +71,16 @@ public class HackathonController {
         return new ResponseEntity<>("Team correttamente iscritto", HttpStatus.OK);
     }
 
-    public void uploadSubmission() {
-        //TODO implement: add a submission in Hackathon
+    @PostMapping("/unregister")
+    public ResponseEntity<String> unregisterTeam(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        service.unregisterTeam(userDetails.getUsername());
+        return new ResponseEntity<>("Team correttamente disiscritto", HttpStatus.OK);
     }
 
-    public void cancelRegistration() {
-        //TODO implement: remove Team from Hackathon
+    public void uploadSubmission() {
+        //TODO implement: add a submission in Hackathon
     }
 
     public void proclaimWinner() {

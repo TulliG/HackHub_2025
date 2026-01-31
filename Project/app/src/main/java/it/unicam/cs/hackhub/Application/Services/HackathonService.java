@@ -140,6 +140,7 @@ public class HackathonService {
         ConcludedHackathon h = new ConcludedHackathon(hackathon, str);
         concludedHackathonRepository.save(h);
         hackathonRepository.delete(hackathon);
+        // TODO: rimuovi tutte le partecipazioni
     }
 
     @Transactional
@@ -200,5 +201,28 @@ public class HackathonService {
         }
     }
 
+    @Transactional
+    public void unregisterTeam(String username) {
+        User user = userService.getByUsername(username);
+        Team team = user.getTeam();
+        if (team == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non sei in un team");
+        }
+        Hackathon hackathon = team.getHackathon();
+        if (hackathon == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non sei iscritto ad un hackathon");
+        }
+        refreshStateIfNeeded(hackathon);
+        if (hackathon.getState() != State.REGISTRATION) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi più disiscriveri all'hackathon");
+        }
 
+        hackathon.removeTeam(team);
+        for (User member : team.getMembers()) {
+            HackathonParticipation p = member.getParticipation();
+            if (p == null) continue;
+            hackathon.removeParticipation(p, member);
+            participationRepository.delete(p);
+        }
+    }
 }
