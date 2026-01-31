@@ -6,6 +6,7 @@ import it.unicam.cs.hackhub.Controllers.Requests.CreateTeamRequest;
 import it.unicam.cs.hackhub.Model.Entities.Team;
 import it.unicam.cs.hackhub.Model.Entities.User;
 import it.unicam.cs.hackhub.Repositories.TeamRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +36,14 @@ public class TeamService {
         team.addMember(user);
         teamRepository.save(team);
         return teamMapper.toDTO(team);
+    }
+
+    @Transactional
+    public Team getById(Long id){
+        return teamRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Team con id "+id+ "non esiste"
+                ));
     }
 
     public void quitTeam(@NonNull Long userId) {

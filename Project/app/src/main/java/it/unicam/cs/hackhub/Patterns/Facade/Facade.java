@@ -58,13 +58,17 @@ public class Facade {
     }
 
     private void acceptTeamInvite(Long id, UserDetails details) {
-        User user = userService.checkIfIsAvailable(details.getUsername());
+        userService.checkIfIsAvailable(details.getUsername());
         Notification notis = notificationService.getById(id);
-        if (user.getTeam().getHackathon() != null) {
+        if (notis.getSender().getTeam().getHackathon() != null) {
             throw new ResponseStatusException(
-                    HttpStatus.
-            )
+                    HttpStatus.CONFLICT,
+                    "Il team sta partecipando ad un hackathon"
+            );
         }
+        teamService.getById(notis.getTargetId()).addMember(notis.getReceiver());
+        notificationService.delete(notis.getId());
+        // TODO AGGIUNGI NOTIFICA DI INORMAZIONE
     }
 
     public void acceptJudgeInvite() {

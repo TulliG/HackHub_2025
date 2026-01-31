@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -30,9 +32,11 @@ public class UserController {
     }
 
     @GetMapping("/available")
-    public void getAvailableUsers() {
-        userService.getAvailableUsers()
-                .forEach(userMapper::toDTO);
+    public List<UserDTO> getAvailableUsers() {
+        return userService.getAvailableUsers()
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
 
