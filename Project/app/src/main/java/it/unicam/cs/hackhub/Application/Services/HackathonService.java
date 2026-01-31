@@ -65,26 +65,14 @@ public class HackathonService {
     }
 
     @Transactional(readOnly = true)
-    public List<HackathonDTO> getAll() {
-        return hackathonRepository
-                        .findAll()
-                        .stream()
-                        .map(mapper::toDTO)
-                        .toList();
+    public List<Hackathon> getAll() {
+        return hackathonRepository.findAll();
+
     }
 
     @Transactional(readOnly = true)
-    public List<ConcludedHackathonDTO> getAllConcluded() {
-        return concludedHackathonRepository
-                .findAll()
-                .stream()
-                .map(mapper::toDTO)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public Set<User> getUsers(@NonNull Long id) {
-        return null; // TODO
+    public List<ConcludedHackathon> getAllConcluded() {
+        return concludedHackathonRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -102,7 +90,7 @@ public class HackathonService {
         return hackathonRepository.save(hackathon);
     }
 
-    public HackathonDTO createHackathon(
+    public Hackathon createHackathon(
             CreateHackathonRequest req,
             UserDetails details) {
 
@@ -132,18 +120,21 @@ public class HackathonService {
         hackathonRepository.save(h);
 
         HackathonParticipation participation = new HackathonParticipation(organizer, h, Role.ORGANIZER);
-        participationRepository.save(participation);
+        createParticipation(participation);
 
-        h.addParticipation(participation);
-        return mapper.toDTO(h);
+        h.addParticipation(participation, organizer);
+        return h;
     }
-
 
     public void remove(@NonNull Long id) {
         if (!hackathonRepository.existsById(id)) {
             throw new EntityNotFoundException("Hackathon not found with id " + id);
         }
         hackathonRepository.deleteById(id);
+    }
+
+    public void createParticipation(HackathonParticipation participation) {
+        hackathonRepository.save(participation.getHackathon());
     }
 
     private void cancelledHackathon(Hackathon hackathon, String str) {
@@ -153,7 +144,7 @@ public class HackathonService {
     }
 
     @Transactional
-    protected void refreshStateIfNeeded(Hackathon h) {
+    public void refreshStateIfNeeded(Hackathon h) {
         LocalDateTime localDateTime = LocalDateTime.now(clock);
         State state = h.computeState(localDateTime);
         if (state == h.getState()) return;
@@ -170,6 +161,14 @@ public class HackathonService {
         }
         h.setState(state);
     }
+
+    public List<Hackathon> getByState(State state) {
+        return hackathonRepository.findAll()
+                .stream()
+                .filter(h -> h.getState() == state)
+                .toList();
+    }
+
 
 
 

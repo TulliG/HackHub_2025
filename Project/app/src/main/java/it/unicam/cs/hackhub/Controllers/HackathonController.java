@@ -2,8 +2,10 @@ package it.unicam.cs.hackhub.Controllers;
 
 import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
+import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
+import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,13 @@ import java.util.List;
 public class HackathonController {
 
     private final HackathonService service;
+    private final HackathonMapper mapper;
     private final Facade facade;
 
-    public HackathonController(HackathonService service, Facade facade) {
+    public HackathonController(HackathonService service, Facade facade,  HackathonMapper mapper) {
         this.service = service;
         this.facade = facade;
+        this.mapper = mapper;
     }
 
     @PostMapping("/create")
@@ -31,23 +35,34 @@ public class HackathonController {
     public HackathonDTO createHackathon(
             @RequestBody @Valid CreateHackathonRequest req,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return service.createHackathon(req, userDetails);
+        return mapper.toDTO(service.createHackathon(req, userDetails));
     }
 
-    public void getHackathonsInSubscription() {
-        //TODO implement: return all Hackathon with Hackthon.getState() == State.SUBSCRIPTION
+    @GetMapping("get/registration")
+    public List<HackathonDTO> getHackathonsInSubscription() {
+        return service.getByState(State.REGISTRATION)
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/consultation")
     public List<HackathonDTO> getAllHackathonDTO() {
-        return service.getAll();
+        return service.getAll()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
     @GetMapping("/concluded")
     public List<ConcludedHackathonDTO> getAllConcludedDTO() {
-        return service.getAllConcluded();
+        return service.getAllConcluded()
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
+    @PostMapping("/register")
     public void registerTeam() {
         //TODO implement: add a team in Hackathon
     }

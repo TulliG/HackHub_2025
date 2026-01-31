@@ -20,15 +20,12 @@ import java.util.List;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final NotificationMapper notificationMapper;
     private final UserService userService;
 
 
     public NotificationService(NotificationRepository notificationRepository,
-                               NotificationMapper notificationMapper,
                                UserService userService) {
         this.notificationRepository = notificationRepository;
-        this.notificationMapper = notificationMapper;
         this.userService = userService;
     }
 
@@ -43,28 +40,29 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<NotificationDTO> getByReceiver(@NonNull UserDetails details) {
+    public List<Notification> getByReceiver(@NonNull UserDetails details) {
         return notificationRepository
-                .findByReceiverId(userService.getByUsername(details.getUsername()).getId())
-                .stream()
-                .map(notificationMapper::toDTO)
-                .toList();
+                .findByReceiverId(userService.getByUsername(details.getUsername()).getId());
     }
 
     @Transactional(readOnly = true)
-    public List<NotificationDTO> getByReceiver(@NonNull UserDetails details, @NonNull NotificationType type) {
+    public List<Notification> getByReceiver(@NonNull UserDetails details, @NonNull NotificationType type) {
         return notificationRepository
-                .findByReceiverIdAndType(userService.getByUsername(details.getUsername()).getId(), type)
-                .stream()
-                .map(notificationMapper::toDTO)
-                .toList();
+                .findByReceiverIdAndType(userService.getByUsername(details.getUsername()).getId(), type);
     }
 
     @Transactional(readOnly = true)
-    public NotificationDTO send(@NonNull User sender, @NonNull User receiver,
+    public Notification send(@NonNull User sender, @NonNull User receiver,
                                 @NonNull String messagge,@NonNull NotificationType type, @NonNull Long id) {
         Notification notis = new Notification(sender, receiver, messagge, type, id);
         notificationRepository.save(notis);
-        return  notificationMapper.toDTO(notis);
+        return notis;
+    }
+
+    public Notification send(@NonNull User receiver,
+                             @NonNull String messagge) {
+        Notification notis = new Notification(receiver, messagge);
+        notificationRepository.save(notis);
+        return notis;
     }
 }

@@ -63,13 +63,12 @@ public class Notification {
         this.targetId = targetId;
     }
 
-    public Notification(@NonNull User sender,
-                        @NonNull User receiver,
+    public Notification(@NonNull User receiver,
                         @NonNull String message) {
         if (message.trim().isEmpty())
             throw new IllegalArgumentException("informational notification must have a message");
 
-        this.sender = sender;
+        this.sender = null;
         this.receiver = receiver;
         this.message = message.trim();
         this.type = NotificationType.INFO;

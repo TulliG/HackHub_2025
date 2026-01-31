@@ -1,6 +1,7 @@
 package it.unicam.cs.hackhub.Controllers;
 
 import it.unicam.cs.hackhub.Application.DTOs.NotificationDTO;
+import it.unicam.cs.hackhub.Application.Mappers.NotificationMapper;
 import it.unicam.cs.hackhub.Application.Services.NotificationService;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
@@ -17,22 +18,38 @@ import java.util.List;
 public class NotificationController {
 
     public final NotificationService notificationService;
+    public final NotificationMapper notificationMapper;
     public final Facade  facade;
 
-    public NotificationController(NotificationService notificationService, Facade facade) {
+    public NotificationController(NotificationService notificationService, Facade facade,  NotificationMapper mapper) {
         this.notificationService = notificationService;
         this.facade = facade;
+        this.notificationMapper = mapper;
     }
 
-
+    // TODO: cambiare details con details.getUsername()
     @PostMapping("/send/team/{id}")
-    public NotificationDTO send(
+    public NotificationDTO sendTeamInvite(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails details
             ) {
-        //TODO implement: send notification to a User(possible overloading?)
-        //TODO implement: send support request and report
         return facade.sendTeamInvite(id, details);
+    }
+
+    @PostMapping("/send/mentor/{id}")
+    public NotificationDTO sendMentorInvite(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        return facade.sendMentorInvite(id, details);
+    }
+
+    @PostMapping("/send/judge/{id}")
+    public NotificationDTO sendJudgeInvite(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        return facade.sendJudgeInvite(id, details);
     }
 
     public void bookAppointmeent() {
@@ -54,7 +71,25 @@ public class NotificationController {
     public List<NotificationDTO> getInvites(
             @AuthenticationPrincipal UserDetails details
     ) {
-        return notificationService.getByReceiver(details, NotificationType.TEAM_INVITE);
+        return notificationService.getByReceiver(details)
+                .stream()
+                .map(notificationMapper::toDTO)
+                .toList();
+    }
+
+    @GetMapping("get/{id}")
+    public NotificationDTO getNotificationDetails( @PathVariable Long id ) {
+        return notificationMapper.toDTO(notificationService.getById(id));
+    }
+
+    @GetMapping("get/all")
+    public List<NotificationDTO> getInvite(
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        return notificationService.getByReceiver(details)
+                .stream()
+                .map(notificationMapper::toDTO)
+                .toList();
     }
 
     public void getReports() {

@@ -108,8 +108,9 @@ public class Hackathon {
         submissions.add(submission);
     }
 
-    public void addParticipation(@NonNull HackathonParticipation participation) {
+    public void addParticipation(@NonNull HackathonParticipation participation, User user) {
         participations.add(participation);
+        user.setParticipation(participation);
     }
 
     public State computeState(LocalDateTime now) {
@@ -121,4 +122,5 @@ public class Hackathon {
             return State.EVALUATION;
         return State.CONCLUDED;
     }
+
 }
