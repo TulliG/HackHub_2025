@@ -9,11 +9,11 @@ import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -44,10 +44,11 @@ public class HackathonController {
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
+        // TODO: aggiungere controllo sul team
     }
 
     @GetMapping("/consultation")
-    public List<HackathonDTO> getAllHackathonDTO() {
+    public List<HackathonDTO> getAllHackathon() {
         return service.getAll()
                 .stream()
                 .map(mapper::toDTO)
@@ -55,16 +56,19 @@ public class HackathonController {
     }
 
     @GetMapping("/concluded")
-    public List<ConcludedHackathonDTO> getAllConcludedDTO() {
+    public List<ConcludedHackathonDTO> getAllConcluded() {
         return service.getAllConcluded()
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
     }
 
-    @PostMapping("/register")
-    public void registerTeam() {
-        //TODO implement: add a team in Hackathon
+    @PostMapping("/register/{id}")
+    public ResponseEntity<String> registerTeam(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        service.registerTeam(id, userDetails.getUsername());
+        return new ResponseEntity<>("Team correttamente iscritto", HttpStatus.OK);
     }
 
     public void uploadSubmission() {

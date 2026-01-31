@@ -67,7 +67,6 @@ public class HackathonService {
     @Transactional(readOnly = true)
     public List<Hackathon> getAll() {
         return hackathonRepository.findAll();
-
     }
 
     @Transactional(readOnly = true)
@@ -169,7 +168,37 @@ public class HackathonService {
                 .toList();
     }
 
+    @Transactional
+    public void registerTeam(Long hackathonId, String username) {
 
+        User user = userService.getByUsername(username);
+        Team team = user.getTeam();
+
+        if (team == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non fai parte di un team");
+        }
+        if (team.getHackathon() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il team è già iscritto ad un hackathon");
+        }
+        Hackathon hackathon = hackathonRepository.findById(hackathonId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Hackathon non trovato con id " + hackathonId
+                ));
+
+        refreshStateIfNeeded(hackathon);
+
+        if (hackathon.getState() != State.REGISTRATION) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "L'hackathon non ha le iscrizioni aperte");
+        }
+
+        hackathon.addTeam(team);
+        for (User member : team.getMembers()) {
+            HackathonParticipation hp = new HackathonParticipation(member, hackathon, Role.TEAM_MEMBER);
+            participationRepository.save(hp);
+            member.setParticipation(hp);
+        }
+    }
 
 
 }

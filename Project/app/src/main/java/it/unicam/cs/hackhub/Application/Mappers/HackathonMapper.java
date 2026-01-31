@@ -18,7 +18,7 @@ public class HackathonMapper {
                 .map(p -> p.getUser().getUsername())
                 .findFirst()
                 .orElse(null);
-        return new HackathonDTO(hackathon.getName(), hackathon.getLocation(), hackathon.getRules(), hackathon.getPrize(),
+        return new HackathonDTO(hackathon.getId(), hackathon.getName(), hackathon.getLocation(), hackathon.getRules(), hackathon.getPrize(),
                 hackathon.getState(), hackathon.getStartDate(), hackathon.getEndingDate(), organizer);
     }
 

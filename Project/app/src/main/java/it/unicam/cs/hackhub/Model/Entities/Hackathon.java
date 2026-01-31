@@ -3,6 +3,8 @@ package it.unicam.cs.hackhub.Model.Entities;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import jakarta.persistence.*;
 import lombok.NonNull;
