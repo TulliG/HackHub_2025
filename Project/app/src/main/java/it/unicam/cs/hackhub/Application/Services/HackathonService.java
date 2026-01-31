@@ -33,7 +33,7 @@ public class HackathonService {
 
     private final HackathonRepository hackathonRepository;
     private final ConcludedHackathonRepository concludedHackathonRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AppointmentRepository appointmentRepository;
     private final HackathonMapper mapper;
     private final Clock clock;
@@ -41,7 +41,7 @@ public class HackathonService {
     private final ParticipationRepository participationRepository;
 
     public HackathonService(HackathonRepository hackathonRepository,
-                            UserRepository userRepository,
+                            UserService userService,
                             AppointmentRepository appointmentRepository,
                             HackathonMapper mapper,
                             ConcludedHackathonRepository concludedHackathonRepository,
@@ -49,7 +49,7 @@ public class HackathonService {
                             TeamRepository teamRepository,
                             ParticipationRepository participationRepository) {
         this.hackathonRepository = hackathonRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
         this.concludedHackathonRepository = concludedHackathonRepository;
@@ -105,18 +105,8 @@ public class HackathonService {
     public HackathonDTO createHackathon(
             CreateHackathonRequest req,
             UserDetails details) {
-        User organizer = userRepository.findByUsername(details.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.UNAUTHORIZED,
-                        "Authenticated user not found"
-                ));
 
-        if (organizer.getParticipation() != null || organizer.getTeam() != null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "The user can't create an hackathon because is in a team or in an hackathon"
-            );
-        }
+        User organizer = userService.checkIfIsAvailable(details.getUsername());
 
         if (!req.startDate().isAfter(LocalDateTime.now(clock)) ||
                 !req.startDate().isBefore(req.evaluationDate()) ||
