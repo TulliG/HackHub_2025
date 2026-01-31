@@ -2,9 +2,12 @@ package it.unicam.cs.hackhub.Controllers;
 
 import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
+import it.unicam.cs.hackhub.Application.DTOs.SubmissionDTO;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
+import it.unicam.cs.hackhub.Application.Mappers.SubmissionMapper;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
+import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import jakarta.validation.Valid;
@@ -21,13 +24,15 @@ import java.util.List;
 public class HackathonController {
 
     private final HackathonService service;
-    private final HackathonMapper mapper;
+    private final HackathonMapper hackathonMapper;
+    private final SubmissionMapper submissionMapper;
     private final Facade facade;
 
-    public HackathonController(HackathonService service, Facade facade,  HackathonMapper mapper) {
+    public HackathonController(HackathonService service, Facade facade,  HackathonMapper mapper, SubmissionMapper submissionMapper) {
         this.service = service;
         this.facade = facade;
-        this.mapper = mapper;
+        this.hackathonMapper = mapper;
+        this.submissionMapper = submissionMapper;
     }
 
     @PostMapping("/create")
@@ -35,14 +40,14 @@ public class HackathonController {
     public HackathonDTO createHackathon(
             @RequestBody @Valid CreateHackathonRequest req,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return mapper.toDTO(service.createHackathon(req, userDetails));
+        return hackathonMapper.toDTO(service.createHackathon(req, userDetails));
     }
 
     @GetMapping("get/registration")
     public List<HackathonDTO> getHackathonsInSubscription() {
         return service.getByState(State.REGISTRATION)
                 .stream()
-                .map(mapper::toDTO)
+                .map(hackathonMapper::toDTO)
                 .toList();
         // TODO: aggiungere controllo sul team
     }
@@ -51,7 +56,7 @@ public class HackathonController {
     public List<HackathonDTO> getAllHackathon() {
         return service.getAll()
                 .stream()
-                .map(mapper::toDTO)
+                .map(hackathonMapper::toDTO)
                 .toList();
     }
 
@@ -59,7 +64,7 @@ public class HackathonController {
     public List<ConcludedHackathonDTO> getAllConcluded() {
         return service.getAllConcluded()
                 .stream()
-                .map(mapper::toDTO)
+                .map(hackathonMapper::toDTO)
                 .toList();
     }
 
@@ -79,8 +84,12 @@ public class HackathonController {
         return new ResponseEntity<>("Team correttamente disiscritto", HttpStatus.OK);
     }
 
-    public void uploadSubmission() {
-        //TODO implement: add a submission in Hackathon
+    @PostMapping("/upload")
+    public SubmissionDTO uploadSubmission(
+            @RequestBody @Valid SubmissionRequest req,
+            @AuthenticationPrincipal UserDetails userDetails
+            ) {
+        return submissionMapper.toDTO(service.uploadSubmission(req, userDetails.getUsername()));
     }
 
     public void proclaimWinner() {

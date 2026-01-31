@@ -10,6 +10,7 @@ import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
+import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
 import it.unicam.cs.hackhub.Model.Entities.*;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
@@ -35,6 +36,7 @@ public class HackathonService {
     private final ConcludedHackathonRepository concludedHackathonRepository;
     private final UserService userService;
     private final AppointmentRepository appointmentRepository;
+    private final SubmissionRepository submissionRepository;
     private final HackathonMapper mapper;
     private final Clock clock;
     private final TeamRepository teamRepository;
@@ -47,7 +49,8 @@ public class HackathonService {
                             ConcludedHackathonRepository concludedHackathonRepository,
                             Clock clock,
                             TeamRepository teamRepository,
-                            ParticipationRepository participationRepository) {
+                            ParticipationRepository participationRepository,
+                            SubmissionRepository submissionRepository) {
         this.hackathonRepository = hackathonRepository;
         this.userService = userService;
         this.appointmentRepository = appointmentRepository;
@@ -56,6 +59,7 @@ public class HackathonService {
         this.clock = clock;
         this.teamRepository = teamRepository;
         this.participationRepository = participationRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -136,7 +140,7 @@ public class HackathonService {
         hackathonRepository.save(participation.getHackathon());
     }
 
-    private void cancelledHackathon(Hackathon hackathon, String str) {
+    private void cancelHackathon(Hackathon hackathon, String str) {
         ConcludedHackathon h = new ConcludedHackathon(hackathon, str);
         concludedHackathonRepository.save(h);
         hackathonRepository.delete(hackathon);
@@ -145,21 +149,23 @@ public class HackathonService {
 
     @Transactional
     public void refreshStateIfNeeded(Hackathon h) {
-        LocalDateTime localDateTime = LocalDateTime.now(clock);
-        State state = h.computeState(localDateTime);
-        if (state == h.getState()) return;
-        if (state == State.RUNNING) {
-            Long teamCount = teamRepository.countByHackathonId(h.getId());
-            Long judgeCount
-                    = participationRepository.countByHackathonIdAndRole(h.getId(), Role.JUDGE);
-            Long mentorCount
-                    = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
+        LocalDateTime now = LocalDateTime.now(clock);
+        State computed = h.computeState(now);
+
+        if (computed == State.RUNNING) {
+            long teamCount = teamRepository.countByHackathonId(h.getId());
+            long judgeCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.JUDGE);
+            long mentorCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
+
             if (judgeCount < 1 || mentorCount < 1 || teamCount < 2) {
-                cancelledHackathon(h, "cancelled");
+                cancelHackathon(h, "cancelled");
                 return;
             }
         }
-        h.setState(state);
+
+        if (computed != h.getState()) {
+            h.setState(computed);
+        }
     }
 
     public List<Hackathon> getByState(State state) {
@@ -224,5 +230,44 @@ public class HackathonService {
             hackathon.removeParticipation(p, member);
             participationRepository.delete(p);
         }
+    }
+
+    @Transactional
+    public Submission uploadSubmission(SubmissionRequest submissionRequest, String username) {
+        User user = userService.getByUsername(username);
+
+        if (user.getTeam() == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non sei in un team");
+        }
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.TEAM_MEMBER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        refreshStateIfNeeded(h);
+
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi fare un upload in questo stato");
+        }
+
+        Team team = user.getTeam();
+
+        if (team.getHackathon() == null || !team.getHackathon().getId().equals(h.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il tuo team non è iscritto a questo hackathon");
+        }
+
+        Submission s = submissionRepository
+                .findByHackathonIdAndTeamId(h.getId(), team.getId())
+                .map(existing -> {
+                    existing.setContent(submissionRequest.content());
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    Submission created = new Submission(submissionRequest.content(), team, h);
+                    h.addSubmission(created);
+                    return created;
+                });
+
+        return submissionRepository.save(s);
     }
 }

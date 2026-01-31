@@ -3,6 +3,7 @@ package it.unicam.cs.hackhub.Model.Entities;
 import lombok.NonNull;
 import lombok.Getter;
 import jakarta.persistence.*;
+import lombok.Setter;
 
 @Entity
 @Table(name="submissions")
@@ -14,6 +15,7 @@ public class Submission {
     private Long id;
 
     @Getter
+    @Setter
     @Column(nullable = false)
     private String content;
 
@@ -33,7 +35,7 @@ public class Submission {
 
     protected Submission() {}
 
-    public Submission(@NonNull Hackathon hackathon, @NonNull String content, @NonNull Team team) {
+    public Submission(@NonNull String content, @NonNull Team team, @NonNull Hackathon hackathon) {
         this.hackathon = hackathon;
         this.content = content;
         this.submissioner = team;
