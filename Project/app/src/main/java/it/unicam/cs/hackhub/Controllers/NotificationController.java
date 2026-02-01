@@ -4,6 +4,7 @@ import it.unicam.cs.hackhub.Application.DTOs.NotificationDTO;
 import it.unicam.cs.hackhub.Application.Mappers.NotificationMapper;
 import it.unicam.cs.hackhub.Application.Services.NotificationService;
 import it.unicam.cs.hackhub.Controllers.Requests.AcceptSupportRequest;
+import it.unicam.cs.hackhub.Controllers.Requests.ReportRequest;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import org.springframework.http.HttpStatus;
@@ -110,6 +111,15 @@ public class NotificationController {
                 .stream()
                 .map(notificationMapper::toDTO)
                 .toList();
+    }
+
+    @PostMapping("/send/report/{id}")
+    public NotificationDTO sendReport(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails details,
+            @RequestBody ReportRequest report
+    ) {
+        return facade.sendReport(id, details.getUsername(), report.report());
     }
 
     public void getReports() {

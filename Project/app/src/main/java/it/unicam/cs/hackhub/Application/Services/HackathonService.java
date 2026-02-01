@@ -9,6 +9,7 @@ import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
 import it.unicam.cs.hackhub.Model.Entities.*;
+import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Patterns.Builder.Builder;
@@ -312,5 +313,42 @@ public class HackathonService {
     public void addAppointment(Appointment appointment, Hackathon hackathon) {
         appointmentRepository.save(appointment);
         hackathon.addAppointment(appointment);
+    }
+
+    public List<Appointment> getCalender(String username) {
+        User user = userService.getByUsername(username);
+
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.MENTOR) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+        Hackathon h = user.getParticipation().getHackathon();
+        refreshStateIfNeeded(h);
+
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        return getAppointments(user.getId(),  h.getId());
+    }
+
+    public List<Team> getTeams(String username) {
+        User user = userService.getByUsername(username);
+        if (user.getParticipation() == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non stai partecipando ad un hackathon");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        return h.getTeams().stream().toList();
+    }
+
+    public User getOrganizer(Hackathon hackathon) {
+        return hackathon.getParticipations()
+                .stream()
+                .filter(p -> p.getRole() == Role.ORGANIZER)
+                .map(HackathonParticipation::getUser)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        "Hackathon senza organizzatore"
+                ));
     }
 }

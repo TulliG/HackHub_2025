@@ -9,7 +9,6 @@ public class AppointmentMapper {
 
     public AppointmentDTO toDTO(Appointment appointment) {
         return new AppointmentDTO(
-                appointment.getHackathon().getName(),
                 appointment.getTeam().getName(),
                 appointment.getDescription()
         );

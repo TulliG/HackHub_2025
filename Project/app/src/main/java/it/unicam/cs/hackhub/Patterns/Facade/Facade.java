@@ -306,6 +306,30 @@ public class Facade {
         );
     }
 
+    public NotificationDTO sendReport(Long teamId, String username, String report) {
+        User user = userService.getByUsername(username);
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.MENTOR) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+        Hackathon h = user.getParticipation().getHackathon();
+        hackathonService.refreshStateIfNeeded(h);
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+
+        Team team = teamService.getById(teamId);
+        return notificationMapper.toDTO(
+                notificationService.send(
+                    user,
+                    hackathonService.getOrganizer(h),
+                    "Team " +team.getName() + " segnalato: "+report,
+                    NotificationType.REPORT,
+                    teamId
+            )
+        );
+    }
+
     public List<Notification> getSupportRequests(@NonNull String username) {
         User user = userService.getByUsername(username);
         if (user.getParticipation() == null || user.getParticipation().getRole() != Role.MENTOR) {

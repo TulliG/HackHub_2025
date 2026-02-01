@@ -1,9 +1,7 @@
 package it.unicam.cs.hackhub.Controllers;
 
 import it.unicam.cs.hackhub.Application.DTOs.*;
-import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
-import it.unicam.cs.hackhub.Application.Mappers.SubmissionMapper;
-import it.unicam.cs.hackhub.Application.Mappers.UserMapper;
+import it.unicam.cs.hackhub.Application.Mappers.*;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
@@ -27,13 +25,23 @@ public class HackathonController {
     private final SubmissionMapper submissionMapper;
     private final Facade facade;
     private final UserMapper userMapper;
+    private final AppointmentMapper appointmentMapper;
+    private final TeamMapper teamMapper;
 
-    public HackathonController(HackathonService service, Facade facade, HackathonMapper mapper, SubmissionMapper submissionMapper, UserMapper userMapper) {
+    public HackathonController(HackathonService service,
+                               Facade facade,
+                               HackathonMapper mapper,
+                               SubmissionMapper submissionMapper,
+                               UserMapper userMapper,
+                               AppointmentMapper appointmentMapper,
+                               TeamMapper teamMapper) {
         this.service = service;
         this.facade = facade;
         this.hackathonMapper = mapper;
         this.submissionMapper = submissionMapper;
         this.userMapper = userMapper;
+        this.appointmentMapper = appointmentMapper;
+        this.teamMapper = teamMapper;
     }
 
     @PostMapping("/create")
@@ -125,7 +133,20 @@ public class HackathonController {
     public List<AppointmentDTO> getCalendar(
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        //TODO implement: return all Hackathon's Appointments
+        return service.getCalender(userDetails.getUsername())
+                .stream()
+                .map(appointmentMapper::toDTO)
+                .toList();
+    }
+
+    @GetMapping("/get/teams")
+    public List<TeamDTO> getHackathonTeams(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return service.getTeams(userDetails.getUsername())
+                .stream()
+                .map(teamMapper::toDTO)
+                .toList();
     }
 
     public void getHackathonTeams() {
