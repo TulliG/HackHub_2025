@@ -40,6 +40,7 @@ public class HackathonService {
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
     private final HackathonCancellationService cancellationService;
+    private final NotificationService notificationService;
 
     public HackathonService(HackathonRepository hackathonRepository,
                             UserService userService,
@@ -50,7 +51,8 @@ public class HackathonService {
                             TeamRepository teamRepository,
                             ParticipationRepository participationRepository,
                             SubmissionRepository submissionRepository,
-                            HackathonCancellationService cancellationService) {
+                            HackathonCancellationService cancellationService,
+                            NotificationService notificationService) {
         this.hackathonRepository = hackathonRepository;
         this.userService = userService;
         this.appointmentRepository = appointmentRepository;
@@ -61,6 +63,7 @@ public class HackathonService {
         this.participationRepository = participationRepository;
         this.submissionRepository = submissionRepository;
         this.cancellationService = cancellationService;
+        this.notificationService = notificationService;
     }
 
     @Transactional(readOnly = true)
@@ -388,16 +391,17 @@ public class HackathonService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
         }
 
-
         Team t = teamRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.CONFLICT,
                         "Il team non esiste"
                 ));
+
         double userPrize = (double) h.getPrize() / t.getMembers().size();
 
         for (User u : t.getMembers()) {
             u.setWallet(u.getWallet() + userPrize);
+            notificationService.send(u, "Hai vinto l'hackathon: "+h.getName());
         }
 
         cancellationService.cancelHackathon(h.getId(), t.getName());

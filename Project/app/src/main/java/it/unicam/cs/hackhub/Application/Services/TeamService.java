@@ -46,14 +46,6 @@ public class TeamService {
     }
 
     @Transactional
-    public Team getById(Long id){
-        return teamRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Team con id "+id+ "non esiste"
-                ));
-    }
-
-    @Transactional
     public void quitTeam(@NonNull String username) {
         User user = userService.getByUsername(username);
         Team team = user.getTeam();
@@ -75,5 +67,26 @@ public class TeamService {
         if (team.getMembers().isEmpty()) {
             teamRepository.delete(team);
         }
+    }
+
+    @Transactional
+    public Team getById(Long id){
+        return teamRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Team con id "+id+ "non esiste"
+                ));
+    }
+
+
+    public Team getByMember(String username) {
+        User user = userService.getByUsername(username);
+        Team team = user.getTeam();
+        if (team == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Non sei in un team"
+            );
+        }
+        return team;
     }
 }

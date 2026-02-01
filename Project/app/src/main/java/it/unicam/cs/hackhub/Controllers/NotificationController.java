@@ -130,4 +130,12 @@ public class NotificationController {
                 .map(notificationMapper::toDTO)
                 .toList();
     }
+
+    @PostMapping("/deny/{id}")
+    public ResponseEntity<String> deny(
+            @PathVariable Long id
+    ) {
+        notificationService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

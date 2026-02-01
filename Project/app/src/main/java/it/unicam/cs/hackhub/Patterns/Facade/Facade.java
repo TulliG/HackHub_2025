@@ -1,6 +1,5 @@
 package it.unicam.cs.hackhub.Patterns.Facade;
 
-import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.NotificationDTO;
 import it.unicam.cs.hackhub.Application.Mappers.NotificationMapper;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
@@ -8,21 +7,16 @@ import it.unicam.cs.hackhub.Application.Services.NotificationService;
 import it.unicam.cs.hackhub.Application.Services.TeamService;
 import it.unicam.cs.hackhub.Application.Services.UserService;
 import it.unicam.cs.hackhub.Controllers.Requests.AcceptSupportRequest;
-import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Model.Entities.*;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
-import it.unicam.cs.hackhub.Repositories.ParticipationRepository;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.List;
 
@@ -176,6 +170,7 @@ public class Facade {
             for (User u : team.getMembers()) {
                 notificationService.send(u, "Il mentore non può accettare: calendario pieno");
             }
+            notificationService.delete(id);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Il calendario è pieno");
         }
 
@@ -360,4 +355,6 @@ public class Facade {
         }
         return notificationService.getByTypeAndTargetId(username, NotificationType.REPORT, h.getId());
     }
+
+
 }
