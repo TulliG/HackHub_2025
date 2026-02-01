@@ -8,6 +8,7 @@ import java.util.Set;
 
 import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
 import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
+import it.unicam.cs.hackhub.Application.Exceptions.HackathonCancelledException;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
@@ -41,6 +42,7 @@ public class HackathonService {
     private final Clock clock;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
+    private final HackathonCancellationService cancellationService;
 
     public HackathonService(HackathonRepository hackathonRepository,
                             UserService userService,
@@ -50,7 +52,8 @@ public class HackathonService {
                             Clock clock,
                             TeamRepository teamRepository,
                             ParticipationRepository participationRepository,
-                            SubmissionRepository submissionRepository) {
+                            SubmissionRepository submissionRepository,
+                            HackathonCancellationService cancellationService) {
         this.hackathonRepository = hackathonRepository;
         this.userService = userService;
         this.appointmentRepository = appointmentRepository;
@@ -60,6 +63,7 @@ public class HackathonService {
         this.teamRepository = teamRepository;
         this.participationRepository = participationRepository;
         this.submissionRepository = submissionRepository;
+        this.cancellationService = cancellationService;
     }
 
     @Transactional(readOnly = true)
@@ -140,14 +144,8 @@ public class HackathonService {
         hackathonRepository.save(participation.getHackathon());
     }
 
-    private void cancelHackathon(Hackathon hackathon, String str) {
-        ConcludedHackathon h = new ConcludedHackathon(hackathon, str);
-        concludedHackathonRepository.save(h);
-        hackathonRepository.delete(hackathon);
-        // TODO: rimuovi tutte le partecipazioni
-    }
 
-    @Transactional
+
     public void refreshStateIfNeeded(Hackathon h) {
         LocalDateTime now = LocalDateTime.now(clock);
         State computed = h.computeState(now);
@@ -158,8 +156,8 @@ public class HackathonService {
             long mentorCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
 
             if (judgeCount < 1 || mentorCount < 1 || teamCount < 2) {
-                cancelHackathon(h, "cancelled");
-                return;
+                cancellationService.cancelHackathon(h.getId(), "requisiti non soddisfatti");
+                throw new HackathonCancelledException("Hackathon cancellato: requisiti non soddisfatti");
             }
         }
 

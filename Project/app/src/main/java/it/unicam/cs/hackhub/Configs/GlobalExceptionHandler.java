@@ -1,6 +1,7 @@
 package it.unicam.cs.hackhub.Configs;
 
 import it.unicam.cs.hackhub.Application.DTOs.ApiError;
+import it.unicam.cs.hackhub.Application.Exceptions.HackathonCancelledException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(ex.getStatusCode())
                 .body(body);
+    }
+
+    @ExceptionHandler(HackathonCancelledException.class)
+    public ResponseEntity<ApiError> handleHackathonCancelled(
+            HackathonCancelledException ex,
+            HttpServletRequest request
+    ) {
+        ApiError body = new ApiError(
+                409,
+                "Conflict",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 }
