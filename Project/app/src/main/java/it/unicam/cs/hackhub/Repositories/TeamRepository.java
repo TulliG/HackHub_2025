@@ -9,4 +9,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     Long countByHackathonId(Long hackathonId);
     List<Team> findAllByHackathonId(Long hackathonId);
+    boolean existsByName(String name);
 }

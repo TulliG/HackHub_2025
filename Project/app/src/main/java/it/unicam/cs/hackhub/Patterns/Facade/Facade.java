@@ -54,12 +54,12 @@ public class Facade {
         //User sender, User receiver, String message
     }
 
-    public void accept(Long id, UserDetails details) {
+    public void accept(Long id, String username) {
         Notification notis = notificationService.getById(id);
         switch (notis.getType()) {
-            case TEAM_INVITE -> acceptTeamInvite(id, details);
-            case JUDGE_INVITE ->  acceptJudgeInvite(id, details);
-            case MENTOR_INVITE ->  acceptMentorInvite(id, details);
+            case TEAM_INVITE -> acceptTeamInvite(id, username);
+            case JUDGE_INVITE ->  acceptJudgeInvite(id, username);
+            case MENTOR_INVITE ->  acceptMentorInvite(id, username);
             case SUPPORT_REQUEST ->   acceptSupportRequest();
             default -> throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
@@ -67,8 +67,8 @@ public class Facade {
         }
     }
 
-    private void acceptTeamInvite(Long id, UserDetails details) {
-        userService.checkIfIsAvailable(details.getUsername());
+    private void acceptTeamInvite(Long id, String username) {
+        userService.checkIfIsAvailable(username);
         Notification notis = notificationService.getById(id);
         if (notis.getSender().getTeam().getHackathon() != null) {
             throw new ResponseStatusException(
@@ -80,8 +80,8 @@ public class Facade {
         notificationService.delete(notis.getId());
     }
 
-    public void acceptJudgeInvite(Long id, UserDetails details) {
-        userService.checkIfIsAvailable(details.getUsername());
+    public void acceptJudgeInvite(Long id, String username) {
+        userService.checkIfIsAvailable(username);
 
         Notification notis = notificationService.getById(id);
         Hackathon hackathon = hackathonService.get(notis.getTargetId());
@@ -106,8 +106,8 @@ public class Facade {
         notificationService.delete(notis.getId());
     }
 
-    public void acceptMentorInvite(Long id, UserDetails details) {
-        userService.checkIfIsAvailable(details.getUsername());
+    public void acceptMentorInvite(Long id, String username) {
+        userService.checkIfIsAvailable(username);
 
         Notification notis = notificationService.getById(id);
         Hackathon hackathon = hackathonService.get(notis.getTargetId());
@@ -137,16 +137,16 @@ public class Facade {
     }
 
     @Transactional
-    public NotificationDTO sendTeamInvite(Long id, UserDetails details) {
-        if (userService.getByUsername(details.getUsername()).getTeam() == null) {
+    public NotificationDTO sendTeamInvite(Long id, String username) {
+        if (userService.getByUsername(username).getTeam() == null) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Lo user non fa parte di un team");
         }
-        User sender = userService.getByUsername(details.getUsername());
+        User sender = userService.getByUsername(username);
         return notificationMapper.toDTO(
                 notificationService.send(
-                        userService.getByUsername(details.getUsername()),
+                        userService.getByUsername(username),
                         userService.getById(id),
                         "Lo User "+sender.getUsername()+" ti ha invitato al team "+sender.getTeam().getName(),
                         NotificationType.TEAM_INVITE,
@@ -155,15 +155,15 @@ public class Facade {
         );
     }
 
-    public NotificationDTO sendMentorInvite(Long id, UserDetails details) {
-        User sender = userService.getByUsername(details.getUsername());
+    public NotificationDTO sendMentorInvite(Long id, String username) {
+        User sender = userService.getByUsername(username);
         if (sender.getParticipation() != null && sender.getParticipation().getRole() != Role.ORGANIZER) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Lo user non è un organizzatore"
             );
         }
-        Hackathon hackathon = userService.getByUsername(details.getUsername()).getParticipation().getHackathon();
+        Hackathon hackathon = userService.getByUsername(username).getParticipation().getHackathon();
         hackathonService.refreshStateIfNeeded(hackathon);
         if (hackathon.getState() != State.REGISTRATION && hackathon.getState() != State.RUNNING) {
             throw new ResponseStatusException(
@@ -183,15 +183,15 @@ public class Facade {
         );
     }
 
-    public NotificationDTO sendJudgeInvite(Long id, UserDetails details) {
-        User sender = userService.getByUsername(details.getUsername());
+    public NotificationDTO sendJudgeInvite(Long id, String username) {
+        User sender = userService.getByUsername(username);
         if (sender.getParticipation() != null && sender.getParticipation().getRole() != Role.ORGANIZER) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Lo user non è un organizzatore"
             );
         }
-        Hackathon hackathon = userService.getByUsername(details.getUsername()).getParticipation().getHackathon();
+        Hackathon hackathon = userService.getByUsername(username).getParticipation().getHackathon();
         hackathonService.refreshStateIfNeeded(hackathon);
         if (hackathon.getState() != State.REGISTRATION) {
             throw new ResponseStatusException(

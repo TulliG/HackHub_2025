@@ -33,7 +33,12 @@ public class UserService {
     }
 
     public void create(String username, String password) {
-        //TODO: check dello username
+        if (userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Username già esistente"
+            );
+        }
         userRepository.save(new User(username, password));
     }
 

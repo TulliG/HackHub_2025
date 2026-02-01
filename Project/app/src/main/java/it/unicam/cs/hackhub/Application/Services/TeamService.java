@@ -33,6 +33,12 @@ public class TeamService {
     @Transactional
     public Team createTeam(CreateTeamRequest req, UserDetails details) {
         User user = userService.checkIfIsAvailable(details.getUsername());
+        if (teamRepository.existsByName(req.name())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Esiste già un team con nome " + req.name()
+            );
+        }
         Team team = new Team(req.name());
         team.addMember(user);
         teamRepository.save(team);

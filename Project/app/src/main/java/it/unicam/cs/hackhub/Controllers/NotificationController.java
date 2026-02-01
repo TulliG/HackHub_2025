@@ -27,13 +27,12 @@ public class NotificationController {
         this.notificationMapper = mapper;
     }
 
-    // TODO: cambiare details con details.getUsername()
     @PostMapping("/send/team/{id}")
     public NotificationDTO sendTeamInvite(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails details
             ) {
-        return facade.sendTeamInvite(id, details);
+        return facade.sendTeamInvite(id, details.getUsername());
     }
 
     @PostMapping("/send/mentor/{id}")
@@ -41,7 +40,7 @@ public class NotificationController {
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails details
     ) {
-        return facade.sendMentorInvite(id, details);
+        return facade.sendMentorInvite(id, details.getUsername());
     }
 
     @PostMapping("/send/judge/{id}")
@@ -49,7 +48,7 @@ public class NotificationController {
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails details
     ) {
-        return facade.sendJudgeInvite(id, details);
+        return facade.sendJudgeInvite(id, details.getUsername());
     }
 
     public void bookAppointmeent() {
@@ -61,7 +60,7 @@ public class NotificationController {
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails details
     ) {
-        facade.accept(id, details);
+        facade.accept(id, details.getUsername());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("Notifica accettata correttamente");
@@ -71,7 +70,7 @@ public class NotificationController {
     public List<NotificationDTO> getInvites(
             @AuthenticationPrincipal UserDetails details
     ) {
-        return notificationService.getByReceiver(details)
+        return notificationService.getInvites(details.getUsername())
                 .stream()
                 .map(notificationMapper::toDTO)
                 .toList();
@@ -86,7 +85,7 @@ public class NotificationController {
     public List<NotificationDTO> getInvite(
             @AuthenticationPrincipal UserDetails details
     ) {
-        return notificationService.getByReceiver(details)
+        return notificationService.getByReceiver(details.getUsername())
                 .stream()
                 .map(notificationMapper::toDTO)
                 .toList();
@@ -102,6 +101,4 @@ public class NotificationController {
     public void showDetails() {
         //TODO implement: show notification's details
     }
-
-
 }

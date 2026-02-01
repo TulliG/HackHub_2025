@@ -40,9 +40,20 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getByReceiver(@NonNull UserDetails details) {
+    public List<Notification> getByReceiver(@NonNull String username) {
         return notificationRepository
-                .findByReceiverId(userService.getByUsername(details.getUsername()).getId());
+                .findByReceiverId(userService.getByUsername(username).getId());
+    }
+
+    public List<Notification> getInvites(@NonNull String username) {
+        return getByReceiver(username)
+                .stream()
+                .filter(n ->
+                        n.getType() == NotificationType.TEAM_INVITE ||
+                                n.getType() == NotificationType.MENTOR_INVITE ||
+                                n.getType() == NotificationType.JUDGE_INVITE
+                )
+                .toList();
     }
 
     @Transactional(readOnly = true)

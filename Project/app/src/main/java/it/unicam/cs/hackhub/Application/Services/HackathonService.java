@@ -3,11 +3,7 @@ package it.unicam.cs.hackhub.Application.Services;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-
-import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
-import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
 import it.unicam.cs.hackhub.Application.Exceptions.HackathonCancelledException;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
@@ -182,9 +178,11 @@ public class HackathonService {
         if (team == null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Non fai parte di un team");
         }
+
         if (team.getHackathon() != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Il team è già iscritto ad un hackathon");
         }
+
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -254,6 +252,7 @@ public class HackathonService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Il tuo team non è iscritto a questo hackathon");
         }
 
+        // logica di sovrascrizione della sottomissione
         Submission s = submissionRepository
                 .findByHackathonIdAndTeamId(h.getId(), team.getId())
                 .map(existing -> {
