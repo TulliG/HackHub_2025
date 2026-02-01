@@ -7,22 +7,24 @@ import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Application.Services.NotificationService;
 import it.unicam.cs.hackhub.Application.Services.TeamService;
 import it.unicam.cs.hackhub.Application.Services.UserService;
+import it.unicam.cs.hackhub.Controllers.Requests.AcceptSupportRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
-import it.unicam.cs.hackhub.Model.Entities.Hackathon;
-import it.unicam.cs.hackhub.Model.Entities.HackathonParticipation;
-import it.unicam.cs.hackhub.Model.Entities.Notification;
-import it.unicam.cs.hackhub.Model.Entities.User;
+import it.unicam.cs.hackhub.Model.Entities.*;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Repositories.ParticipationRepository;
 import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
+import java.util.List;
 
 @Service
 public class Facade {
@@ -32,7 +34,6 @@ public class Facade {
     private final UserService userService;
     private final NotificationService notificationService;
     private final NotificationMapper notificationMapper;
-
 
     public Facade(HackathonService hackathonService,
                   TeamService teamService,
@@ -50,20 +51,27 @@ public class Facade {
 
     }
 
-    public void sendNotification() {
-        //User sender, User receiver, String message
-    }
-
-    public void accept(Long id, String username) {
+    public void accept(Long id, String username, AcceptSupportRequest body) {
         Notification notis = notificationService.getById(id);
+
         switch (notis.getType()) {
             case TEAM_INVITE -> acceptTeamInvite(id, username);
-            case JUDGE_INVITE ->  acceptJudgeInvite(id, username);
-            case MENTOR_INVITE ->  acceptMentorInvite(id, username);
-            case SUPPORT_REQUEST ->   acceptSupportRequest();
+            case JUDGE_INVITE -> acceptJudgeInvite(id, username);
+            case MENTOR_INVITE -> acceptMentorInvite(id, username);
+            case SUPPORT_REQUEST -> {
+                String description = (body != null) ? body.description() : null;
+                if (description == null || description.isBlank()) {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "La descrizione dell'appuntamento è obbligatoria per una SUPPORT_REQUEST"
+                    );
+                }
+                acceptSupportRequest(id, username, description);
+            }
             default -> throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Questa notifica non può essere accettata");
+                    "Questa notifica non può essere accettata"
+            );
         }
     }
 
@@ -132,8 +140,52 @@ public class Facade {
         notificationService.delete(notis.getId());
     }
 
-    public void acceptSupportRequest() {
-        //TODO hackathon state check(RUNNING)
+    public void acceptSupportRequest(Long id, String username, String description) {
+        User user = userService.getByUsername(username);
+
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.MENTOR) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Notification n = notificationService.getById(id);
+
+        if (n.getType() != NotificationType.SUPPORT_REQUEST) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Notifica non valida");
+        }
+        if (!n.getReceiver().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Questa notifica non è tua");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        hackathonService.refreshStateIfNeeded(h);
+
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        Team team = n.getSender().getTeam();
+        if (team == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il team della richiesta non esiste");
+        }
+
+        List<Appointment> calendar = hackathonService.getAppointments(user.getId(), h.getId());
+
+        long halfHours = Duration.between(h.getStartDate(), h.getEvaluationDate()).toMinutes() / 30;
+
+        if (calendar.size() >= halfHours) {
+            for (User u : team.getMembers()) {
+                notificationService.send(u, "Il mentore non può accettare: calendario pieno");
+            }
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il calendario è pieno");
+        }
+
+        Appointment app = new Appointment(h, user, team, description);
+        hackathonService.addAppointment(app, h);
+
+        for (User u : team.getMembers()) {
+            notificationService.send(u, description);
+        }
+        notificationService.delete(id);
     }
 
     @Transactional
@@ -191,6 +243,7 @@ public class Facade {
                     "Lo user non è un organizzatore"
             );
         }
+
         Hackathon hackathon = userService.getByUsername(username).getParticipation().getHackathon();
         hackathonService.refreshStateIfNeeded(hackathon);
         if (hackathon.getState() != State.REGISTRATION) {
@@ -217,5 +270,55 @@ public class Facade {
                         hackathon.getId()
                 )
         );
+    }
+
+    public NotificationDTO sendSupportRequest(Long id, String username) {
+        User user = userService.getByUsername(username);
+
+        if (user.getTeam() == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non sei in un team");
+        }
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.TEAM_MEMBER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        hackathonService.refreshStateIfNeeded(h);
+
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        Team team = user.getTeam();
+
+        if (team.getHackathon() == null || !team.getHackathon().getId().equals(h.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il tuo team non è iscritto a questo hackathon");
+        }
+
+        return notificationMapper.toDTO(
+                notificationService.send(
+                        user,
+                        userService.getById(id),
+                        "Il team "+user.getTeam().getName()+" ha inviato una richiesta di supporto",
+                        NotificationType.SUPPORT_REQUEST,
+                        h.getId()
+                )
+        );
+    }
+
+    public List<Notification> getSupportRequests(@NonNull String username) {
+        User user = userService.getByUsername(username);
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.MENTOR) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        hackathonService.refreshStateIfNeeded(h);
+
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        return notificationService.getByType(username, NotificationType.SUPPORT_REQUEST);
     }
 }

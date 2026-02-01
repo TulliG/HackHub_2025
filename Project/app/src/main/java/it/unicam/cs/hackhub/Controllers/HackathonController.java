@@ -1,10 +1,9 @@
 package it.unicam.cs.hackhub.Controllers;
 
-import it.unicam.cs.hackhub.Application.DTOs.ConcludedHackathonDTO;
-import it.unicam.cs.hackhub.Application.DTOs.HackathonDTO;
-import it.unicam.cs.hackhub.Application.DTOs.SubmissionDTO;
+import it.unicam.cs.hackhub.Application.DTOs.*;
 import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Application.Mappers.SubmissionMapper;
+import it.unicam.cs.hackhub.Application.Mappers.UserMapper;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
@@ -27,12 +26,14 @@ public class HackathonController {
     private final HackathonMapper hackathonMapper;
     private final SubmissionMapper submissionMapper;
     private final Facade facade;
+    private final UserMapper userMapper;
 
-    public HackathonController(HackathonService service, Facade facade,  HackathonMapper mapper, SubmissionMapper submissionMapper) {
+    public HackathonController(HackathonService service, Facade facade, HackathonMapper mapper, SubmissionMapper submissionMapper, UserMapper userMapper) {
         this.service = service;
         this.facade = facade;
         this.hackathonMapper = mapper;
         this.submissionMapper = submissionMapper;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/create")
@@ -96,24 +97,39 @@ public class HackathonController {
         //TODO implement: select Hackathon's winner
     }
 
-    public void getMentors() {
-        //TODO implement: return all Hackathon's mentors
+    @GetMapping("/get/mentors")
+    public List<UserDTO> getMentors(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return service.getMentors(userDetails.getUsername())
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
+    @GetMapping("/get/submissions")
+    public List<SubmissionDTO> getSubmissions(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return service.getSubmissions(userDetails.getUsername())
+                .stream()
+                .map(submissionMapper::toDTO)
+                .toList();
     }
 
     public void rateSubmission() {
         //TODO implement: set Submission' s grade
     }
 
-    public void getAppointments() {
+    @GetMapping("/get/calendar")
+    public List<AppointmentDTO> getCalendar(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         //TODO implement: return all Hackathon's Appointments
     }
 
     public void getHackathonTeams() {
         //TODO implement: return all Hackathon's Teams
-    }
-
-    public void getSubmissions() {
-        //TODO implement: return all Hackathon's submissions
     }
 
     public void sendRequest() {

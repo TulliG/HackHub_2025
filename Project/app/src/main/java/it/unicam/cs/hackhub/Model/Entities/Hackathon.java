@@ -122,6 +122,10 @@ public class Hackathon {
         participation.setHackathon(null);
     }
 
+    public void addAppointment(@NonNull Appointment appointment) {
+        this.calendar.add(appointment);
+    }
+
     public State computeState(LocalDateTime now) {
         if (now.isBefore(startDate))
             return State.REGISTRATION;

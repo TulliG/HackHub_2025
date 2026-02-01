@@ -34,7 +34,7 @@ public class Appointment {
     @Column(nullable = false)
     private String description;
 
-    protected Appointment() {} // richiesto da JPA
+    protected Appointment() {}
 
     public Appointment(@NonNull Hackathon hackathon,
                        @NonNull User mentor,

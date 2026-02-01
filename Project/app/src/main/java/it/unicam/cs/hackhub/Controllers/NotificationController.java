@@ -3,6 +3,7 @@ package it.unicam.cs.hackhub.Controllers;
 import it.unicam.cs.hackhub.Application.DTOs.NotificationDTO;
 import it.unicam.cs.hackhub.Application.Mappers.NotificationMapper;
 import it.unicam.cs.hackhub.Application.Services.NotificationService;
+import it.unicam.cs.hackhub.Controllers.Requests.AcceptSupportRequest;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,14 @@ public class NotificationController {
         return facade.sendJudgeInvite(id, details.getUsername());
     }
 
+    @PostMapping("/send/support/{id}")
+    public NotificationDTO sendSupportRequest (
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        return facade.sendSupportRequest(id, details.getUsername());
+    }
+
     public void bookAppointmeent() {
         //TODO implement: add new Appointment in Hackathon, send notification to involved Team
     }
@@ -58,9 +67,10 @@ public class NotificationController {
     @PostMapping("/accept/{id}")
     public ResponseEntity<String> accept(
             @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails details
+            @AuthenticationPrincipal UserDetails details,
+            @RequestBody(required = false) AcceptSupportRequest body
     ) {
-        facade.accept(id, details.getUsername());
+        facade.accept(id, details.getUsername(), body);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("Notifica accettata correttamente");
@@ -76,13 +86,24 @@ public class NotificationController {
                 .toList();
     }
 
+    @GetMapping("/get/support")
+    public List<NotificationDTO> getSupportRequests(
+            @AuthenticationPrincipal UserDetails details
+    ) {
+        return facade.getSupportRequests(
+                details.getUsername())
+                .stream()
+                .map(notificationMapper::toDTO)
+                .toList();
+    }
+
     @GetMapping("get/{id}")
     public NotificationDTO getNotificationDetails( @PathVariable Long id ) {
         return notificationMapper.toDTO(notificationService.getById(id));
     }
 
     @GetMapping("get/all")
-    public List<NotificationDTO> getInvite(
+    public List<NotificationDTO> getAll(
             @AuthenticationPrincipal UserDetails details
     ) {
         return notificationService.getByReceiver(details.getUsername())

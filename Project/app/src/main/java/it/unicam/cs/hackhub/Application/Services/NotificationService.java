@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
@@ -57,9 +58,11 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getByReceiver(@NonNull UserDetails details, @NonNull NotificationType type) {
-        return notificationRepository
-                .findByReceiverIdAndType(userService.getByUsername(details.getUsername()).getId(), type);
+    public List<Notification> getByType(@NonNull String username, @NonNull NotificationType type) {
+        return getByReceiver(username)
+                .stream()
+                .filter(n -> n.getType() == type)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -76,4 +79,6 @@ public class NotificationService {
         notificationRepository.save(notis);
         return notis;
     }
+
+
 }

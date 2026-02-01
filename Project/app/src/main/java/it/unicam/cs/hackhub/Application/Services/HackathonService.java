@@ -79,14 +79,26 @@ public class HackathonService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Submission> getSubmissions(@NonNull Long id) {
-        return null;
-        //return get(id).getSubmissions();
+    public List<Submission> getSubmissions(@NonNull String username
+    ) {
+        User user = userService.getByUsername(username);
+        if (user.getParticipation() == null || user.getParticipation().getRole() == Role.TEAM_MEMBER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        refreshStateIfNeeded(h);
+
+        if (h.getState() == State.REGISTRATION) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        return h.getSubmissions().stream().toList();
     }
 
     @Transactional(readOnly = true)
-    public Set<Appointment> getAppointments(@NonNull Long hackathonId, @NonNull Long userId) {
-        return null; // TODO
+    public List<Appointment> getAppointments(@NonNull Long mentorId, @NonNull Long hackathonId) {
+        return appointmentRepository.findByMentorIdAndHackathonId(mentorId, hackathonId);
     }
 
     public Hackathon put(@NonNull Hackathon hackathon) {
@@ -141,7 +153,6 @@ public class HackathonService {
     }
 
 
-
     public void refreshStateIfNeeded(Hackathon h) {
         LocalDateTime now = LocalDateTime.now(clock);
         State computed = h.computeState(now);
@@ -167,6 +178,36 @@ public class HackathonService {
                 .stream()
                 .filter(h -> h.getState() == state)
                 .toList();
+    }
+
+    public List<User> getMentors(String username) {
+        User user = userService.getByUsername(username);
+
+        if (user.getTeam() == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non sei in un team");
+        }
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.TEAM_MEMBER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        refreshStateIfNeeded(h);
+
+        if (h.getState() != State.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        Team team = user.getTeam();
+
+        if (team.getHackathon() == null || !team.getHackathon().getId().equals(h.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il tuo team non è iscritto a questo hackathon");
+        }
+
+         return h.getParticipations()
+                 .stream()
+                 .filter(p -> p.getRole() == Role.MENTOR)
+                 .map(HackathonParticipation::getUser)
+                 .toList();
     }
 
     @Transactional
@@ -266,5 +307,10 @@ public class HackathonService {
                 });
 
         return submissionRepository.save(s);
+    }
+
+    public void addAppointment(Appointment appointment, Hackathon hackathon) {
+        appointmentRepository.save(appointment);
+        hackathon.addAppointment(appointment);
     }
 }

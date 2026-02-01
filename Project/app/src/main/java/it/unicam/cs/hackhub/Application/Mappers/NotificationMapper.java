@@ -10,7 +10,9 @@ public class NotificationMapper {
     public NotificationDTO toDTO(Notification notification) {
         return new NotificationDTO(
                 notification.getId(),
-                notification.getSender().getUsername(),
+                notification.getSender() == null
+                        ? "System"
+                        : notification.getSender().getUsername(),
                 notification.getReceiver().getUsername(),
                 notification.getMessage()
         );
