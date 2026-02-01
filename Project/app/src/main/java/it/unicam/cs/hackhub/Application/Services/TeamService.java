@@ -1,25 +1,19 @@
 package it.unicam.cs.hackhub.Application.Services;
 
-import it.unicam.cs.hackhub.Application.DTOs.TeamDTO;
-import it.unicam.cs.hackhub.Application.Mappers.TeamMapper;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateTeamRequest;
 import it.unicam.cs.hackhub.Model.Entities.Team;
 import it.unicam.cs.hackhub.Model.Entities.User;
 import it.unicam.cs.hackhub.Repositories.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-/**
- * Service class for managing {@code Team}s
- */
 @Service
+@Transactional
 public class TeamService {
 
     private final TeamRepository teamRepository;
@@ -30,63 +24,57 @@ public class TeamService {
         this.userService = userService;
     }
 
-    @Transactional
-    public Team createTeam(CreateTeamRequest req, UserDetails details) {
+    public Team createTeam(@NonNull CreateTeamRequest req, @NonNull UserDetails details) {
         User user = userService.checkIfIsAvailable(details.getUsername());
-        if (teamRepository.existsByName(req.name())) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Esiste già un team con nome " + req.name()
-            );
+
+        String name = req.name();
+        if (teamRepository.existsByName(name)) {
+            throw conflict("Esiste già un team con nome " + name);
         }
-        Team team = new Team(req.name());
+
+        Team team = new Team(name);
         team.addMember(user);
-        teamRepository.save(team);
-        return team;
+
+        return teamRepository.save(team);
     }
 
-    @Transactional
     public void quitTeam(@NonNull String username) {
         User user = userService.getByUsername(username);
-        Team team = user.getTeam();
-        if (team == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Non fai parte di nessun team"
-            );
-        }
+        Team team = requireTeam(user);
 
         if (team.getHackathon() != null) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Stai partecipando ad un hackathon, non puoi abbandonare il team"
-            );
+            throw conflict("Stai partecipando ad un hackathon, non puoi abbandonare il team");
         }
 
         team.removeMember(user);
+
         if (team.getMembers().isEmpty()) {
             teamRepository.delete(team);
         }
     }
 
-    @Transactional
-    public Team getById(Long id){
+    @Transactional(readOnly = true)
+    public Team getById(@NonNull Long id) {
         return teamRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Team con id "+id+ "non esiste"
-                ));
+                .orElseThrow(() -> new EntityNotFoundException("Team con id " + id + " non esiste"));
+    }
+
+    @Transactional(readOnly = true)
+    public Team getByMember(@NonNull String username) {
+        User user = userService.getByUsername(username);
+        return requireTeam(user);
     }
 
 
-    public Team getByMember(String username) {
-        User user = userService.getByUsername(username);
+    private Team requireTeam(User user) {
         Team team = user.getTeam();
         if (team == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Non sei in un team"
-            );
+            throw conflict("Non fai parte di nessun team");
         }
         return team;
+    }
+
+    private ResponseStatusException conflict(String msg) {
+        return new ResponseStatusException(HttpStatus.CONFLICT, msg);
     }
 }

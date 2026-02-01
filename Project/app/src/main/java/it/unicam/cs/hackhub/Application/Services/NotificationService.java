@@ -23,7 +23,6 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserService userService;
 
-
     public NotificationService(NotificationRepository notificationRepository,
                                UserService userService) {
         this.notificationRepository = notificationRepository;
@@ -84,6 +83,4 @@ public class NotificationService {
         return notificationRepository
                 .findByReceiverUsernameAndTypeAndTargetId(username, type, targetId);
     }
-
-
 }

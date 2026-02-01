@@ -174,25 +174,7 @@ public class HackathonService {
     }
 
 
-    public void refreshStateIfNeeded(Hackathon h) {
-        LocalDateTime now = LocalDateTime.now(clock);
-        State computed = h.computeState(now);
 
-        if (computed == State.RUNNING) {
-            long teamCount = teamRepository.countByHackathonId(h.getId());
-            long judgeCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.JUDGE);
-            long mentorCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
-
-            if (judgeCount < 1 || mentorCount < 1 || teamCount < 2) {
-                cancellationService.cancelHackathon(h.getId(), "requisiti non soddisfatti");
-                throw new HackathonCancelledException("Hackathon cancellato: requisiti non soddisfatti");
-            }
-        }
-
-        if (computed != h.getState()) {
-            h.setState(computed);
-        }
-    }
 
     public List<Hackathon> getByState(State state) {
         return hackathonRepository.findAll()
@@ -361,16 +343,7 @@ public class HackathonService {
         return h.getTeams().stream().toList();
     }
 
-    public User getOrganizer(Hackathon hackathon) {
-        return hackathon.getParticipations()
-                .stream()
-                .filter(p -> p.getRole() == Role.ORGANIZER)
-                .map(HackathonParticipation::getUser)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                        "Hackathon senza organizzatore"
-                ));
-    }
+
 
     public void rateSubmission(Long id, String username, int grade) {
         Submission s = getSubmission(id, username);
@@ -405,5 +378,36 @@ public class HackathonService {
         }
 
         cancellationService.cancelHackathon(h.getId(), t.getName());
+    }
+
+    public void refreshStateIfNeeded(Hackathon h) {
+        LocalDateTime now = LocalDateTime.now(clock);
+        State computed = h.computeState(now);
+
+        if (computed == State.RUNNING) {
+            long teamCount = teamRepository.countByHackathonId(h.getId());
+            long judgeCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.JUDGE);
+            long mentorCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
+
+            if (judgeCount < 1 || mentorCount < 1 || teamCount < 2) {
+                cancellationService.cancelHackathon(h.getId(), "requisiti non soddisfatti");
+                throw new HackathonCancelledException("Hackathon cancellato: requisiti non soddisfatti");
+            }
+        }
+
+        if (computed != h.getState()) {
+            h.setState(computed);
+        }
+    }
+
+    public User getOrganizer(Hackathon hackathon) {
+        return hackathon.getParticipations()
+                .stream()
+                .filter(p -> p.getRole() == Role.ORGANIZER)
+                .map(HackathonParticipation::getUser)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        "Hackathon senza organizzatore"
+                ));
     }
 }

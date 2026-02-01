@@ -24,20 +24,17 @@ public class HackathonController {
     private final HackathonService service;
     private final HackathonMapper hackathonMapper;
     private final SubmissionMapper submissionMapper;
-    private final Facade facade;
     private final UserMapper userMapper;
     private final AppointmentMapper appointmentMapper;
     private final TeamMapper teamMapper;
 
     public HackathonController(HackathonService service,
-                               Facade facade,
                                HackathonMapper mapper,
                                SubmissionMapper submissionMapper,
                                UserMapper userMapper,
                                AppointmentMapper appointmentMapper,
                                TeamMapper teamMapper) {
         this.service = service;
-        this.facade = facade;
         this.hackathonMapper = mapper;
         this.submissionMapper = submissionMapper;
         this.userMapper = userMapper;
@@ -102,10 +99,6 @@ public class HackathonController {
         return submissionMapper.toDTO(service.uploadSubmission(req, userDetails.getUsername()));
     }
 
-    public void proclaimWinner() {
-        //TODO implement: select Hackathon's winner
-    }
-
     @GetMapping("/get/mentors")
     public List<UserDTO> getMentors(
             @AuthenticationPrincipal UserDetails userDetails
@@ -132,10 +125,6 @@ public class HackathonController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return submissionMapper.toDTO(service.getSubmission(id, userDetails.getUsername()));
-    }
-
-    public void rateSubmission() {
-        //TODO implement: set Submission' s grade
     }
 
     @GetMapping("/get/calendar")

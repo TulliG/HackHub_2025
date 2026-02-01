@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class HackathonCancellationService {
 
@@ -36,27 +38,33 @@ public class HackathonCancellationService {
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hackathon non trovato"));
 
-        ConcludedHackathon concluded = new ConcludedHackathon(hackathon, reason);
-        concludedHackathonRepository.save(concluded);
+        concludedHackathonRepository.save(new ConcludedHackathon(hackathon, reason));
 
-        var parts = participationRepository.findAllByHackathonId(hackathonId);
-        for (HackathonParticipation p : parts) {
-            User u = p.getUser();
-            if (u != null) u.setParticipation(null);
-        }
-        participationRepository.deleteAll(parts);
-
-        var teams = teamRepository.findAllByHackathonId(hackathonId);
-        for (Team t : teams) {
-            t.setHackathon(null);
-        }
+        detachParticipations(hackathonId);
+        detachTeams(hackathonId);
 
         hackathon.getTeams().clear();
         hackathon.getSubmissions().clear();
         hackathon.getCalendar().clear();
 
         hackathonRepository.delete(hackathon);
-
         hackathonRepository.flush();
+    }
+
+    private void detachParticipations(Long hackathonId) {
+        List<HackathonParticipation> parts = participationRepository.findAllByHackathonId(hackathonId);
+        for (HackathonParticipation p : parts) {
+            if (p.getUser() != null) {
+                p.getUser().setParticipation(null);
+            }
+        }
+        participationRepository.deleteAll(parts);
+    }
+
+    private void detachTeams(Long hackathonId) {
+        List<Team> teams = teamRepository.findAllByHackathonId(hackathonId);
+        for (Team t : teams) {
+            t.setHackathon(null);
+        }
     }
 }
