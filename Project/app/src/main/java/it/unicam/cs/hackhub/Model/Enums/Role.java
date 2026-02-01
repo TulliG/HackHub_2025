@@ -11,7 +11,4 @@ public enum Role {
     JUDGE,
     MENTOR;
 
-    public boolean isStaff() {
-        return this != TEAM_MEMBER;
-    }
 }

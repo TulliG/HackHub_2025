@@ -28,5 +28,4 @@ public class HackathonMapper {
                 hackathon.getEndingDate(),
                 hackathon.getWinnerTeamName());
     }
-
 }

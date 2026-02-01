@@ -41,10 +41,6 @@ public class Facade {
         this.notificationMapper = notificationMapper;
     }
 
-    public void createParticipation() {
-
-    }
-
     public void accept(Long id, String username, AcceptSupportRequest body) {
         Notification notis = notificationService.getById(id);
 
@@ -84,10 +80,11 @@ public class Facade {
 
     public void acceptJudgeInvite(Long id, String username) {
         userService.checkIfIsAvailable(username);
-
         Notification notis = notificationService.getById(id);
+
         Hackathon hackathon = hackathonService.get(notis.getTargetId());
         hackathonService.refreshStateIfNeeded(hackathon);
+
         if (hackathon.getState() != State.REGISTRATION) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
@@ -355,6 +352,4 @@ public class Facade {
         }
         return notificationService.getByTypeAndTargetId(username, NotificationType.REPORT, h.getId());
     }
-
-
 }

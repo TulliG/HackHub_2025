@@ -36,7 +36,6 @@ public class TeamController {
         return ResponseEntity.ok("Team abbandonato correttamente");
     }
 
-    // TODO: dettagli del proprio team
     @GetMapping("/get")
     public TeamDTO getTeamDetails(
             @AuthenticationPrincipal UserDetails userDetails

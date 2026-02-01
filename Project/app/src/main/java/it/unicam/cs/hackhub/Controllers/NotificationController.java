@@ -61,10 +61,6 @@ public class NotificationController {
         return facade.sendSupportRequest(id, details.getUsername());
     }
 
-    public void bookAppointmeent() {
-        //TODO implement: add new Appointment in Hackathon, send notification to involved Team
-    }
-
     @PostMapping("/accept/{id}")
     public ResponseEntity<String> accept(
             @PathVariable Long id,

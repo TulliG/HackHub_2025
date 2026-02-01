@@ -1,19 +1,13 @@
 package it.unicam.cs.hackhub.Application.Services;
 
-import it.unicam.cs.hackhub.Application.DTOs.NotificationDTO;
-import it.unicam.cs.hackhub.Application.Mappers.NotificationMapper;
 import it.unicam.cs.hackhub.Model.Entities.Notification;
 import it.unicam.cs.hackhub.Model.Entities.User;
 import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Repositories.NotificationRepository;
-import it.unicam.cs.hackhub.Repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
@@ -53,14 +47,6 @@ public class NotificationService {
                                 n.getType() == NotificationType.MENTOR_INVITE ||
                                 n.getType() == NotificationType.JUDGE_INVITE
                 )
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Notification> getByType(@NonNull String username, @NonNull NotificationType type) {
-        return getByReceiver(username)
-                .stream()
-                .filter(n -> n.getType() == type)
                 .toList();
     }
 

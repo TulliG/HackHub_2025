@@ -3,13 +3,10 @@ package it.unicam.cs.hackhub.Application.Services;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import it.unicam.cs.hackhub.Application.Exceptions.HackathonCancelledException;
-import it.unicam.cs.hackhub.Application.Mappers.HackathonMapper;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
 import it.unicam.cs.hackhub.Model.Entities.*;
-import it.unicam.cs.hackhub.Model.Enums.NotificationType;
 import it.unicam.cs.hackhub.Model.Enums.Role;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Patterns.Builder.Builder;
@@ -35,7 +32,6 @@ public class HackathonService {
     private final UserService userService;
     private final AppointmentRepository appointmentRepository;
     private final SubmissionRepository submissionRepository;
-    private final HackathonMapper mapper;
     private final Clock clock;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
@@ -45,7 +41,6 @@ public class HackathonService {
     public HackathonService(HackathonRepository hackathonRepository,
                             UserService userService,
                             AppointmentRepository appointmentRepository,
-                            HackathonMapper mapper,
                             ConcludedHackathonRepository concludedHackathonRepository,
                             Clock clock,
                             TeamRepository teamRepository,
@@ -56,7 +51,6 @@ public class HackathonService {
         this.hackathonRepository = hackathonRepository;
         this.userService = userService;
         this.appointmentRepository = appointmentRepository;
-        this.mapper = mapper;
         this.concludedHackathonRepository = concludedHackathonRepository;
         this.clock = clock;
         this.teamRepository = teamRepository;
@@ -65,6 +59,7 @@ public class HackathonService {
         this.cancellationService = cancellationService;
         this.notificationService = notificationService;
     }
+
 
     @Transactional(readOnly = true)
     public Hackathon get(@NonNull Long id) {
@@ -122,10 +117,6 @@ public class HackathonService {
         return appointmentRepository.findByMentorIdAndHackathonId(mentorId, hackathonId);
     }
 
-    public Hackathon put(@NonNull Hackathon hackathon) {
-        return hackathonRepository.save(hackathon);
-    }
-
     public Hackathon createHackathon(
             CreateHackathonRequest req,
             UserDetails details) {
@@ -162,19 +153,9 @@ public class HackathonService {
         return h;
     }
 
-    public void remove(@NonNull Long id) {
-        if (!hackathonRepository.existsById(id)) {
-            throw new EntityNotFoundException("Hackathon not found with id " + id);
-        }
-        hackathonRepository.deleteById(id);
-    }
-
     public void createParticipation(HackathonParticipation participation) {
         hackathonRepository.save(participation.getHackathon());
     }
-
-
-
 
     public List<Hackathon> getByState(State state) {
         return hackathonRepository.findAll()
@@ -205,7 +186,6 @@ public class HackathonService {
         if (team.getHackathon() == null || !team.getHackathon().getId().equals(h.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Il tuo team non è iscritto a questo hackathon");
         }
-
          return h.getParticipations()
                  .stream()
                  .filter(p -> p.getRole() == Role.MENTOR)
@@ -388,7 +368,6 @@ public class HackathonService {
             long teamCount = teamRepository.countByHackathonId(h.getId());
             long judgeCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.JUDGE);
             long mentorCount = participationRepository.countByHackathonIdAndRole(h.getId(), Role.MENTOR);
-
             if (judgeCount < 1 || mentorCount < 1 || teamCount < 2) {
                 cancellationService.cancelHackathon(h.getId(), "requisiti non soddisfatti");
                 throw new HackathonCancelledException("Hackathon cancellato: requisiti non soddisfatti");
