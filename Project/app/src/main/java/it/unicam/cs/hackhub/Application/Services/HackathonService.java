@@ -97,6 +97,23 @@ public class HackathonService {
         return h.getSubmissions().stream().toList();
     }
 
+    public Submission getSubmission(Long id, String username) {
+        User user = userService.getByUsername(username);
+        if (user.getParticipation() == null || user.getParticipation().getRole() == Role.TEAM_MEMBER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        refreshStateIfNeeded(h);
+
+        if (h.getState() == State.REGISTRATION) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+        return submissionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sottomissione non trovata"));
+    }
+
     @Transactional(readOnly = true)
     public List<Appointment> getAppointments(@NonNull Long mentorId, @NonNull Long hackathonId) {
         return appointmentRepository.findByMentorIdAndHackathonId(mentorId, hackathonId);
@@ -350,5 +367,39 @@ public class HackathonService {
                 .orElseThrow(() -> new IllegalStateException(
                         "Hackathon senza organizzatore"
                 ));
+    }
+
+    public void rateSubmission(Long id, String username, int grade) {
+        Submission s = getSubmission(id, username);
+        s.setGrade(grade);
+        submissionRepository.save(s);
+    }
+
+    public void proclaimWinner(Long id, String username) {
+        User user = userService.getByUsername(username);
+
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.ORGANIZER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non hai la partecipazione adatta");
+        }
+        Hackathon h = user.getParticipation().getHackathon();
+        refreshStateIfNeeded(h);
+
+        if (h.getState() != State.CONCLUDED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+
+
+        Team t = teamRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Il team non esiste"
+                ));
+        double userPrize = (double) h.getPrize() / t.getMembers().size();
+
+        for (User u : t.getMembers()) {
+            u.setWallet(u.getWallet() + userPrize);
+        }
+
+        cancellationService.cancelHackathon(h.getId(), t.getName());
     }
 }

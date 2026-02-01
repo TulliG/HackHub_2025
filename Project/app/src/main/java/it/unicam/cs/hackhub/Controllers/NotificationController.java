@@ -122,14 +122,12 @@ public class NotificationController {
         return facade.sendReport(id, details.getUsername(), report.report());
     }
 
-    public void getReports() {
-        //TODO implement: return all Organizer's reports
-    }
-
-    public void getSupportRquests() {
-        //TODO implement: return all Mentor's support requests
-    }
-    public void showDetails() {
-        //TODO implement: show notification's details
+    @GetMapping("/get/reports")
+    public List<NotificationDTO> getReports(
+            @AuthenticationPrincipal UserDetails details) {
+        return facade.getReports(details.getUsername())
+                .stream()
+                .map(notificationMapper::toDTO)
+                .toList();
     }
 }

@@ -38,7 +38,9 @@ public class User {
     @JoinColumn(name = "team_id")
     private Team team = null;
 
-
+    @Setter
+    @Getter
+    private double wallet = 0;
 
     public User() {}
 

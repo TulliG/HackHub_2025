@@ -39,9 +39,5 @@ public class TeamController {
         return ResponseEntity.ok("Team abbandonato correttamente");
     }
 
-
-
-    public void quitTeam() {
-        //TODO implement: make a User quit from its Team
-    }
+    // TODO: dettagli del proprio team
 }

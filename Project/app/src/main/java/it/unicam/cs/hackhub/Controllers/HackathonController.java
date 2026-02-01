@@ -4,6 +4,7 @@ import it.unicam.cs.hackhub.Application.DTOs.*;
 import it.unicam.cs.hackhub.Application.Mappers.*;
 import it.unicam.cs.hackhub.Application.Services.HackathonService;
 import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
+import it.unicam.cs.hackhub.Controllers.Requests.RatingRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
 import it.unicam.cs.hackhub.Model.Enums.State;
 import it.unicam.cs.hackhub.Patterns.Facade.Facade;
@@ -125,6 +126,14 @@ public class HackathonController {
                 .toList();
     }
 
+    @GetMapping("get/submission/{id}")
+    public SubmissionDTO getSubmission(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return submissionMapper.toDTO(service.getSubmission(id, userDetails.getUsername()));
+    }
+
     public void rateSubmission() {
         //TODO implement: set Submission' s grade
     }
@@ -149,11 +158,26 @@ public class HackathonController {
                 .toList();
     }
 
-    public void getHackathonTeams() {
-        //TODO implement: return all Hackathon's Teams
+    @PostMapping("/rate/{id}")
+    public ResponseEntity<String> rateSubmission(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody RatingRequest req
+    ) {
+        service.rateSubmission(id, userDetails.getUsername(), req.grade());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Sottomissione correttamente valutata");
     }
 
-    public void sendRequest() {
-        //TODO implement: send support request in Hackathon
+    @PostMapping("/proclaim/{id}")
+    public ResponseEntity<String> proclaimWinner(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        service.proclaimWinner(id, userDetails.getUsername());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Vincitore proclamato, l'hackathon è concluso");
     }
 }

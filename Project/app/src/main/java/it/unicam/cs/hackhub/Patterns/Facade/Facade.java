@@ -325,7 +325,7 @@ public class Facade {
                     hackathonService.getOrganizer(h),
                     "Team " +team.getName() + " segnalato: "+report,
                     NotificationType.REPORT,
-                    teamId
+                    h.getId()
             )
         );
     }
@@ -343,6 +343,21 @@ public class Facade {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
         }
 
-        return notificationService.getByType(username, NotificationType.SUPPORT_REQUEST);
+        return notificationService.getByTypeAndTargetId(username, NotificationType.SUPPORT_REQUEST, h.getId());
+    }
+
+    public List<Notification> getReports(@NonNull String username) {
+        User user = userService.getByUsername(username);
+        if (user.getParticipation() == null || user.getParticipation().getRole() != Role.ORGANIZER) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non sei un organizzatore");
+        }
+
+        Hackathon h = user.getParticipation().getHackathon();
+        hackathonService.refreshStateIfNeeded(h);
+
+        if (h.getState() == State.REGISTRATION) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Non puoi farlo in questo stato");
+        }
+        return notificationService.getByTypeAndTargetId(username, NotificationType.REPORT, h.getId());
     }
 }

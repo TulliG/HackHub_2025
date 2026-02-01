@@ -80,5 +80,10 @@ public class NotificationService {
         return notis;
     }
 
+    public List<Notification> getByTypeAndTargetId(String username, NotificationType type, Long targetId) {
+        return notificationRepository
+                .findByReceiverUsernameAndTypeAndTargetId(username, type, targetId);
+    }
+
 
 }
