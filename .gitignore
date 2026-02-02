@@ -18,6 +18,3 @@ Project/build/
 .idea/
 .vscode/
 
-# H2 DB
-Project/data/
-data/
