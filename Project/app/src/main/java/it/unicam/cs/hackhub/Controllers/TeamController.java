@@ -26,7 +26,7 @@ public class TeamController {
             @RequestBody @Valid CreateTeamRequest createTeamRequest,
             @AuthenticationPrincipal UserDetails userDetails) {
         return teamMapper.toDTO(
-                teamService.createTeam(createTeamRequest, userDetails)
+                teamService.createTeam(createTeamRequest.name(), userDetails.getUsername())
         );
     }
 

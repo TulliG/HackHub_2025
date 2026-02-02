@@ -24,10 +24,9 @@ public class TeamService {
         this.userService = userService;
     }
 
-    public Team createTeam(@NonNull CreateTeamRequest req, @NonNull UserDetails details) {
-        User user = userService.checkIfIsAvailable(details.getUsername());
+    public Team createTeam(@NonNull String name, @NonNull String username) {
+        User user = userService.checkIfIsAvailable(username);
 
-        String name = req.name();
         if (teamRepository.existsByName(name)) {
             throw conflict("Esiste già un team con nome " + name);
         }

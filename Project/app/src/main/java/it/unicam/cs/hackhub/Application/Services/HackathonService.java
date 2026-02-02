@@ -29,14 +29,14 @@ public class HackathonService {
 
     private final HackathonRepository hackathonRepository;
     private final ConcludedHackathonRepository concludedHackathonRepository;
-    private final UserService userService;
     private final AppointmentRepository appointmentRepository;
     private final SubmissionRepository submissionRepository;
-    private final Clock clock;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
     private final HackathonCancellationService cancellationService;
     private final NotificationService notificationService;
+    private final UserService userService;
+    private final Clock clock;
 
     public HackathonService(HackathonRepository hackathonRepository,
                             UserService userService,

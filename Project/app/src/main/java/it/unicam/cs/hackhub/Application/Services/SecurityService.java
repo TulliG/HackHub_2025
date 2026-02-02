@@ -12,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class SecurityService implements UserDetailsService {
 
-
     private final UserService userService;
 
     public SecurityService(UserService userService) {

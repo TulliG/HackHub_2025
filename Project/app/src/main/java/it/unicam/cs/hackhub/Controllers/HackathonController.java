@@ -7,7 +7,6 @@ import it.unicam.cs.hackhub.Controllers.Requests.CreateHackathonRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.RatingRequest;
 import it.unicam.cs.hackhub.Controllers.Requests.SubmissionRequest;
 import it.unicam.cs.hackhub.Model.Enums.State;
-import it.unicam.cs.hackhub.Patterns.Facade.Facade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +55,6 @@ public class HackathonController {
                 .stream()
                 .map(hackathonMapper::toDTO)
                 .toList();
-        // TODO: aggiungere controllo sul team
     }
 
     @GetMapping("/consultation")
