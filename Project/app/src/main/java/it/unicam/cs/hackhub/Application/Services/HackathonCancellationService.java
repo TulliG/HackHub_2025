@@ -33,7 +33,7 @@ public class HackathonCancellationService {
         this.teamRepository = teamRepository;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional //(propagation = Propagation.REQUIRES_NEW)
     public void cancelHackathon(Long hackathonId, String reason) {
         Hackathon hackathon = hackathonRepository.findById(hackathonId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Hackathon non trovato"));

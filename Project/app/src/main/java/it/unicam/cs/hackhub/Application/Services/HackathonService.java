@@ -324,7 +324,6 @@ public class HackathonService {
     }
 
 
-
     public void rateSubmission(Long id, String username, int grade) {
         Submission s = getSubmission(id, username);
         s.setGrade(grade);
